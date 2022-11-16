@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
 import 'package:live_stream/src/stream_state.dart';
 import 'package:nested/nested.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'live_stream.dart';
 import 'live_stream_base.dart';
@@ -165,7 +166,9 @@ class _LiveStreamListenerBaseState<B extends LiveStreamBase, S>
   }
 
   void _subscribe() {
-    _subscription = (widget.state.listener.listen((newState) {
+    _subscription = (widget.state.listener
+        .debounceTime(const Duration(seconds: 1))
+        .listen((newState) {
       widget.listener(context, StreamState(state: newState, error: null));
       // _previousState = state;
     }));

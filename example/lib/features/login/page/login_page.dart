@@ -23,10 +23,10 @@ class LoginPage extends StatelessWidget {
       create: _liveStream,
       child: Scaffold(
           appBar: AppBar(),
-          body: LiveStreamListener(
+          body: LiveStreamListener<LoginLiveStream,LoginModel>(
             listener: (context, StreamState state) {
               print("state");
-              print("${state.state}");
+              print("${(state.state as OnData<LoginModel?>).state?.title}");
               print("${state.error}");
             },
             state: _liveStream.loginApi,

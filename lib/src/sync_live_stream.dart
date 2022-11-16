@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:live_stream/src/stream_state.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'live_state.dart';
@@ -102,15 +101,11 @@ class SyncLiveStream<T> extends StreamBase<T> {
     }
 
     try {
+      streamSink.add(OnLoading());
+
       localStream.listen((event) {
         streamSink.add(OnData(content: event));
-      });
-
-      localStream.doOnListen(() {
-        streamSink.add(OnLoading());
-      });
-
-      localStream.doOnError((error, stacktrace) {
+      }, onError: (error) {
         streamSink.addError(OnError(messages: error));
       });
     } catch (error, stackTrace) {
