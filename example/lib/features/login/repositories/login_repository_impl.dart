@@ -8,4 +8,7 @@ class LoginRepositoryImpl {
   Stream<LoginModel> login(String userName, String password) => TimerStream(
       LoginModel(id: 1, title: "ahmed Aboughosen", userId: 512),
       Duration(seconds: 4));
+
+  // Stream<LoginModel> login(String userName, String password) => Stream.error(new Exception("it's me"));
+
 }

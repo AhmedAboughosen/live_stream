@@ -167,7 +167,6 @@ class _LiveStreamListenerBaseState<B extends LiveStreamBase, S>
 
   void _subscribe() {
     _subscription = (widget.state.listener
-        .debounceTime(const Duration(seconds: 1))
         .listen((newState) {
       widget.listener(context, StreamState(state: newState, error: null));
       // _previousState = state;

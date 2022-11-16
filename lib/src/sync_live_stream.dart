@@ -106,12 +106,17 @@ class SyncLiveStream<T> extends StreamBase<T> {
       localStream.listen((event) {
         streamSink.add(OnData(content: event));
       }, onError: (error) {
-        streamSink.addError(OnError(messages: error));
+        _addError(error);
       });
     } catch (error, stackTrace) {
-      streamSink.addError(OnError(messages: error));
+      _addError(error);
     }
     return listener;
+  }
+
+
+  void _addError(Object error){
+    streamSink.addError(OnError(messages: error));
   }
 
   ValueStream<LiveStreamState<T>> addError(Object error) {
@@ -120,9 +125,9 @@ class SyncLiveStream<T> extends StreamBase<T> {
     }
 
     try {
-      streamSink.addError(OnError(messages: error));
+      _addError(error);
     } catch (error) {
-      streamSink.addError(OnError(messages: error));
+      _addError(error);
     }
     return listener;
   }
@@ -135,7 +140,7 @@ class SyncLiveStream<T> extends StreamBase<T> {
     try {
       streamSink.add(OnData(content: state));
     } catch (error) {
-      streamSink.addError(OnError(messages: error));
+      _addError(error);
     }
     return listener;
   }
@@ -148,7 +153,7 @@ class SyncLiveStream<T> extends StreamBase<T> {
     try {
       streamSink.add(OnLoading());
     } catch (error) {
-      streamSink.addError(OnError(messages: error));
+      _addError(error);
     }
     return listener;
   }
