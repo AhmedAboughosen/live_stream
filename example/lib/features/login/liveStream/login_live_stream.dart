@@ -11,7 +11,7 @@ class LoginLiveStream extends LiveStreamBase {
   final LoginValidation loginValidation;
   final LoginRepositoryImpl loginRepository;
 
-  final SyncLiveStream<LoginModel> loginApi = SyncLiveStream();
+  final SyncLiveStream<LoginModel?> loginApi = SyncLiveStream<LoginModel?>();
 
   LoginLiveStream({
     required this.loginValidation,

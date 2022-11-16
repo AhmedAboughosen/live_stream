@@ -48,7 +48,8 @@ enum ErrorEnum { NOERROR, GOTERROR }
 /// ```
 ///
 /// {@endtemplate}
-class SyncLiveStream<T> extends StreamBase<LiveStreamState<T>> {
+
+class SyncLiveStream<T> extends StreamBase<T> {
   late BehaviorSubject<LiveStreamState<T>> _syncStream;
 
   SyncLiveStream({bool sync = false}) {

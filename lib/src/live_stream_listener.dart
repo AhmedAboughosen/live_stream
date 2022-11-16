@@ -106,7 +106,7 @@ abstract class LiveStreamListenerBase<B extends LiveStreamBase, S>
 
 class _LiveStreamListenerBaseState<B extends LiveStreamBase, S>
     extends SingleChildState<LiveStreamListenerBase<B, S>> {
-  StreamSubscription<S?>? _subscription;
+  StreamSubscription? _subscription;
   late B _liveStream;
   late StreamBase<S?> _previousState;
 
@@ -165,10 +165,10 @@ class _LiveStreamListenerBaseState<B extends LiveStreamBase, S>
   }
 
   void _subscribe() {
-    _subscription = widget.state.listener.listen((newState) {
+    _subscription = (widget.state.listener.listen((newState) {
       widget.listener(context, StreamState(state: newState, error: null));
       // _previousState = state;
-    });
+    }));
 
     _subscription?.onError((error) {
       widget.listener(context, StreamState(state: null, error: error));

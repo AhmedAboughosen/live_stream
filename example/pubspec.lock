@@ -347,7 +347,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "0c4691f6b0ed6def3ef5b2d6d6247c8829c88789"
+      resolved-ref: ebce588a93697d8ca24775a0c0fe3adac8136c4f
       url: "git@github.com:AhmedAboughosen/live_stream.git"
     source: git
     version: "0.0.1"
