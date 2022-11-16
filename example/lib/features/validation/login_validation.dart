@@ -5,8 +5,8 @@ import 'package:injectable/injectable.dart';
 
 @Injectable()
 class LoginValidation extends AbstractValidator<LoginValidation> {
-  StreamValidator email = StreamValidator();
-  StreamValidator password = StreamValidator();
+  StreamValidator<String> email = StreamValidator<String>();
+  StreamValidator<String> password = StreamValidator<String>();
 
   LoginValidation() {
     ruleFor((e) => (e as LoginValidation).email)

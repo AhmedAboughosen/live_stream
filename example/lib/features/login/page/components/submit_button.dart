@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_architecture_rx/core/domain/blocs/login/login_bloc.dart';
+import 'package:live_stream/src/live_stream_provider.dart';
 
-import 'package:form_bloc_version/src/bloc_provider.dart';
+import '../../liveStream/login_live_stream.dart';
 
 class SubmitButton extends StatelessWidget {
   const SubmitButton({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RaisedButton(
       onPressed: () {
-       BlocProvider.of<LoginBloc>(context).login();
+        LiveStreamProvider.of<LoginLiveStream>(context).login();
       },
       color: Colors.blue,
       child: const Text(

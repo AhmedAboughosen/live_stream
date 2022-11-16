@@ -14,8 +14,6 @@ dependencies:
   #RX
   rxdart: ^0.27.5
   nested: ^1.0.0
-  live_stream_base:
-    git: git@github.com:AhmedAboughosen/live_stream_base.git
 
 dev_dependencies:
   flutter_test:

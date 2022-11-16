@@ -2,16 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
-import 'package:live_stream_base/live_stream.dart';
+import 'package:live_stream/src/stream_state.dart';
 import 'package:nested/nested.dart';
 
-
+import 'live_stream.dart';
 import 'live_stream_base.dart';
 
 /// Signature for the `builder` function which takes the `BuildContext` and
 /// [state] and is responsible for returning a VOID which is to be rendered.
 /// This is analogous to the `builder` function in [StreamBuilder].
-typedef StreamWidgetListener<S> = void Function(BuildContext context, StreamBase<S?> state);
+typedef StreamWidgetListener<S> = void Function(
+    BuildContext context, StreamState<S?> state);
 
 /// {@template bloc_listener}
 /// Takes a [StreamWidgetListener] and an optional [liveStream] and [SyncLiveStream] invokes
@@ -47,10 +48,8 @@ typedef StreamWidgetListener<S> = void Function(BuildContext context, StreamBase
 /// {@endtemplate}
 ///
 
-
-class LiveStreamListener<B extends LiveStreamBase, S> extends LiveStreamListenerBase<B, S> {
-
-
+class LiveStreamListener<B extends LiveStreamBase, S>
+    extends LiveStreamListenerBase<B, S> {
   const LiveStreamListener({
     Key? key,
     required StreamWidgetListener<S> listener,
@@ -166,10 +165,13 @@ class _LiveStreamListenerBaseState<B extends LiveStreamBase, S>
   }
 
   void _subscribe() {
-
-    _subscription = widget.state.listener.listen((_) {
-      widget.listener(context, widget.state);
+    _subscription = widget.state.listener.listen((newState) {
+      widget.listener(context, StreamState(state: newState, error: null));
       // _previousState = state;
+    });
+
+    _subscription?.onError((error) {
+      widget.listener(context, StreamState(state: null, error: error));
     });
   }
 

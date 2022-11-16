@@ -20,9 +20,13 @@ class LoginLiveStream extends LiveStreamBase {
   });
 
   void login() {
-    if (!loginValidation.validate()) return;
+    // if (!loginValidation.validate()) return;
 
+    // loginRepository.login(
+    //     "loginValidation.email.state"," loginValidation.password.state").listen((event) {
+    //       print(event);
+    // });
     loginApi.emit(loginRepository.login(
-        loginValidation.email.state, loginValidation.password.state));
+        "loginValidation.email.state"," loginValidation.password.state"));
   }
 }

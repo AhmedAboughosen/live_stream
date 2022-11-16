@@ -7,5 +7,5 @@ import 'login_model.dart';
 class LoginRepositoryImpl {
   Stream<LoginModel> login(String userName, String password) => TimerStream(
       LoginModel(id: 1, title: "ahmed Aboughosen", userId: 512),
-      Duration(seconds: 10));
+      Duration(seconds: 2));
 }
