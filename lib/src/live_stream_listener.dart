@@ -171,11 +171,11 @@ class _LiveStreamListenerBaseState<B extends LiveStreamBase, S>
         .listen((newState) {
       widget.listener(context, StreamState(state: newState, error: null));
       // _previousState = state;
+    },onError: (error){
+      widget.listener(context, StreamState(state: null, error: error));
+
     }));
 
-    _subscription?.onError((error) {
-      widget.listener(context, StreamState(state: null, error: error));
-    });
   }
 
   void _unsubscribe() {
