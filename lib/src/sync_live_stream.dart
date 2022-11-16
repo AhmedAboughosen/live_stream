@@ -1,8 +1,33 @@
 import 'dart:async';
 
-import 'package:live_stream/src/state.dart';
+import 'package:live_stream_base/live_stream.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:stream_bloc/src/stream_base.dart';
+
+/// Enum representing the status of a form at any given point in time.
+enum FormzStatus {
+  /// The form has not been touched.
+  pure,
+
+  /// The form has been completely validated.
+  valid,
+
+  /// The form contains one or more invalid inputs.
+  invalid,
+
+  /// The form is in the process of being submitted.
+  submissionInProgress,
+
+  /// The form has been submitted successfully.
+  submissionSuccess,
+
+  /// The form submission failed.
+  submissionFailure,
+
+  /// The form submission has been canceled.
+  submissionCanceled
+}
+
+enum ErrorEnum { NOERROR, GOTERROR }
 
 /// {@template SyncLiveStream}
 /// A [SyncLiveStream] is similar to [Cubit] but has no notion of State class
@@ -20,24 +45,42 @@ import 'package:stream_bloc/src/stream_base.dart';
 /// ```
 ///
 /// {@endtemplate}
-class SyncLiveStream<T> extends StreamBase<State<T>> {
-  late BehaviorSubject<State<T>> _syncStream;
+class SyncLiveStream<T> extends StreamBase<T> {
+  late BehaviorSubject<T?> _syncStream;
 
   SyncLiveStream({bool sync = false}) {
-    _syncStream = BehaviorSubject<State<T>>(sync: sync);
+    _syncStream = BehaviorSubject<T>(sync: sync);
   }
 
   @override
-  ValueStream<State<T>> get listener => _syncStream.stream;
+  ValueStream<T?> get listener => _syncStream.stream;
 
-  StreamSink<State<T>> get streamSink => _syncStream.sink;
+  StreamSink<T?> get streamSink => _syncStream.sink;
 
   /// Whether the SyncLiveStream is closed.
   ///
   /// A SyncLiveStream is considered closed once [close] is called.
   /// Subsequent state changes cannot occur within a closed SyncLiveStream.
-  @override
   bool get isClosed => _syncStream.isClosed;
+
+  @override
+  Object? get error =>
+      (_syncStream.errorOrNull == null || _syncStream.errorOrNull == ErrorEnum.NOERROR) ? null : _syncStream.error;
+
+  @override
+  bool get hasError =>  (_syncStream.errorOrNull == null || _syncStream.errorOrNull == ErrorEnum.NOERROR) ;
+
+  @override
+  bool get hasState => _syncStream.hasValue;
+
+  @override
+  T? get state => _syncStream.valueOrNull;
+
+  FormzStatus status = FormzStatus.pure;
+
+  void updateStatus(FormzStatus formzStatus) {
+    status = formzStatus;
+  }
 
   /// Updates the [state] to the provided [state].
   ///
@@ -46,64 +89,84 @@ class SyncLiveStream<T> extends StreamBase<State<T>> {
   /// as it is the first thing emitted by the instance.
   ///
   /// * Throws a [StateError] if the SyncLiveStream is closed.
-  ValueStream<State<T>> emit(Stream<T> localStream) {
+  ValueStream<T?> emit(Stream<T> localStream) {
     try {
       if (isClosed) {
         throw StateError('Cannot emit new states after calling close');
       }
 
       localStream.doOnListen(() {
-        streamSink.add(OnLoading());
+        updateStatus(FormzStatus.submissionInProgress);
+        streamSink.add(null);
+        streamSink.addError(ErrorEnum.NOERROR);
       });
 
       localStream.listen((event) {
-        streamSink.add(OnData<T>(content: event));
+        updateStatus(FormzStatus.submissionSuccess);
+        streamSink.add(event);
+        streamSink.addError(ErrorEnum.NOERROR);
       });
 
       localStream.doOnError((error, stacktrace) {
-        return streamSink.add(OnError<T>(messages: error));
+        updateStatus(FormzStatus.submissionFailure);
+        streamSink.addError(error);
+        streamSink.add(null);
       });
     } catch (error, stackTrace) {
-      streamSink.add(OnError<T>(messages: error));
+      updateStatus(FormzStatus.submissionFailure);
+      streamSink.addError(error);
+      streamSink.add(null);
     }
     return listener;
   }
 
-  ValueStream<State<T>> addError(Object error) {
+  ValueStream<T?> addError(Object error) {
     try {
       if (isClosed) {
         throw StateError('Cannot emit new states after calling close');
       }
 
-      streamSink.add(OnError<T>(messages: error));
+      updateStatus(FormzStatus.submissionFailure);
+      streamSink.addError(error);
+      streamSink.add(null);
     } catch (error) {
-      streamSink.add(OnError<T>(messages: error));
+      updateStatus(FormzStatus.submissionFailure);
+      streamSink.addError(error);
+      streamSink.add(null);
     }
     return listener;
   }
 
-  ValueStream<State<T>> addNewState(T? state) {
+  ValueStream<T?> addNewState(T? state) {
     try {
       if (isClosed) {
         throw StateError('Cannot emit new states after calling close');
       }
 
-      streamSink.add(OnData<T>(content: state));
+      updateStatus(FormzStatus.submissionSuccess);
+      streamSink.add(state);
+      streamSink.addError(ErrorEnum.NOERROR);
     } catch (error) {
-      streamSink.add(OnError<T>(messages: error));
+      updateStatus(FormzStatus.submissionFailure);
+      streamSink.addError(error);
+      streamSink.add(null);
     }
     return listener;
   }
 
-  ValueStream<State<T>> onLoading() {
+  ValueStream<T?> onLoading() {
     try {
       if (isClosed) {
         throw StateError('Cannot emit new states after calling close');
       }
 
-      streamSink.add(OnLoading<T>());
+      updateStatus(FormzStatus.submissionInProgress);
+      streamSink.add(null);
+      streamSink.addError(ErrorEnum.NOERROR);
     } catch (error) {
-      streamSink.add(OnError<T>(messages: error));
+      updateStatus(FormzStatus.submissionFailure);
+      streamSink.addError(error);
+      streamSink.add(null);
     }
     return listener;
   }

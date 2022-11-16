@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
+import 'package:live_stream_base/live_stream.dart';
 import 'package:nested/nested.dart';
-import 'package:stream_bloc/src/stream_base.dart';
+
 
 import 'live_stream_base.dart';
 
 /// Signature for the `builder` function which takes the `BuildContext` and
 /// [state] and is responsible for returning a VOID which is to be rendered.
 /// This is analogous to the `builder` function in [StreamBuilder].
-typedef StreamWidgetListener<S> = void Function(BuildContext context, S state);
+typedef StreamWidgetListener<S> = void Function(BuildContext context, StreamBase<S?> state);
 
 /// {@template bloc_listener}
 /// Takes a [StreamWidgetListener] and an optional [liveStream] and [SyncLiveStream] invokes
@@ -46,14 +47,16 @@ typedef StreamWidgetListener<S> = void Function(BuildContext context, S state);
 /// {@endtemplate}
 ///
 
-class LiveStreamListener<B extends LiveStreamBase, S>
-    extends LiveStreamListenerBase<B, S> {
+
+class LiveStreamListener<B extends LiveStreamBase, S> extends LiveStreamListenerBase<B, S> {
+
+
   const LiveStreamListener({
     Key? key,
     required StreamWidgetListener<S> listener,
     B? liveStream,
     Widget? child,
-    required StreamBase<S> state,
+    required StreamBase<S?> state,
   }) : super(
             key: key,
             child: child,
@@ -95,7 +98,7 @@ abstract class LiveStreamListenerBase<B extends LiveStreamBase, S>
 
   /// The [state] will be listened to.
   /// Whenever the [state]'s `state` changes, [listener] will be invoked.
-  final StreamBase<S> state;
+  final StreamBase<S?> state;
 
   @override
   SingleChildState<LiveStreamListenerBase<B, S>> createState() =>
@@ -104,9 +107,9 @@ abstract class LiveStreamListenerBase<B extends LiveStreamBase, S>
 
 class _LiveStreamListenerBaseState<B extends LiveStreamBase, S>
     extends SingleChildState<LiveStreamListenerBase<B, S>> {
-  StreamSubscription<S>? _subscription;
+  StreamSubscription<S?>? _subscription;
   late B _liveStream;
-  late StreamBase<S> _previousState;
+  late StreamBase<S?> _previousState;
 
   @override
   void initState() {
@@ -163,8 +166,9 @@ class _LiveStreamListenerBaseState<B extends LiveStreamBase, S>
   }
 
   void _subscribe() {
-    _subscription = widget.state.listener.listen((state) {
-      widget.listener(context, state);
+
+    _subscription = widget.state.listener.listen((_) {
+      widget.listener(context, widget.state);
       // _previousState = state;
     });
   }

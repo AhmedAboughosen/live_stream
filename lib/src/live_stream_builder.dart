@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:live_stream/src/live_stream_listener.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
+import 'package:live_stream_base/live_stream.dart';
 import 'package:nested/nested.dart';
-import 'package:stream_bloc/src/stream_base.dart';
 
 import 'live_stream_base.dart';
 
@@ -12,7 +12,7 @@ import 'live_stream_base.dart';
 /// [state] and is responsible for returning a widget which is to be rendered.
 /// This is analogous to the `builder` function in [StreamBuilder].
 typedef LiveStreamWidgetBuilder<S> = Widget Function(
-    BuildContext context, S state);
+    BuildContext context, StreamBase<S?> state);
 
 /// {@template live_stream_listener}
 /// Takes a [StreamWidgetListener] and an optional [liveStream] and [SyncLiveStream] invokes
@@ -65,7 +65,7 @@ class LiveStreamBuilder<B extends LiveStreamBase, S>
   final LiveStreamWidgetBuilder<S> builder;
 
   @override
-  Widget build(BuildContext context, S state) => builder(context, state);
+  Widget build(BuildContext context, StreamBase<S?> state) => builder(context, state);
 }
 
 /// {@template bive_stream_listener_Base}
@@ -98,7 +98,7 @@ abstract class LiveStreamBuilderBase<B extends LiveStreamBase, S>
   final StreamBase<S> state;
 
   /// Returns a widget based on the `BuildContext` and current [state].
-  Widget build(BuildContext context, S state);
+  Widget build(BuildContext context, StreamBase<S?> state);
 
   @override
   SingleChildState<LiveStreamBuilderBase<B, S>> createState() =>
@@ -109,13 +109,13 @@ class _LiveStreamBuilderBaseState<B extends LiveStreamBase, S>
     extends SingleChildState<LiveStreamBuilderBase<B, S>> {
   StreamSubscription<S>? _subscription;
   late B _liveStream;
-  late S _state;
+  late StreamBase<S?> _state;
 
   @override
   void initState() {
     super.initState();
     _liveStream = widget.liveStream ?? (LiveStreamProvider.of<B>(context));
-    _state = widget.state.state;
+    _state = widget.state;
   }
 
   @override
@@ -127,7 +127,7 @@ class _LiveStreamBuilderBaseState<B extends LiveStreamBase, S>
     if (oldLiveStream != currentLiveStream) {
       if (_subscription != null) {
         _liveStream = currentLiveStream;
-        _state = widget.state.state;
+        _state = widget.state;
       }
     }
   }
@@ -139,7 +139,7 @@ class _LiveStreamBuilderBaseState<B extends LiveStreamBase, S>
     if (_liveStream != liveStream) {
       if (_subscription != null) {
         _liveStream = liveStream;
-        _state = widget.state.state;
+        _state = widget.state;
       }
     }
   }

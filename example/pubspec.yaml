@@ -62,8 +62,8 @@ dependencies:
   fluent_validation:
     git: git@github.com:AhmedAboughosen/stream_fluent_validation.git
 
-  form_bloc_version:
-    git: git@github.com:AhmedAboughosen/form_bloc.git
+  live_stream:
+    git: git@github.com:AhmedAboughosen/live_stream.git
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +75,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  injectable_generator: ^1.5.4
+  build_runner: ^2.2.0
+  json_serializable: ^6.3.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
