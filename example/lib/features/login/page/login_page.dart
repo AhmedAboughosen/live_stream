@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:live_stream/src/live_stream_listener.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
 import 'package:live_stream/src/stream_state.dart';
+import 'package:live_stream/src/live_state.dart';
 
 import '../../validation/login_validation.dart';
 import 'components/submit_button.dart';
@@ -22,10 +23,10 @@ class LoginPage extends StatelessWidget {
       create: _liveStream,
       child: Scaffold(
           appBar: AppBar(),
-          body: LiveStreamListener<LoginLiveStream, LoginModel>(
-            listener: (context, StreamState<LoginModel?> state) {
+          body: LiveStreamListener(
+            listener: (context, StreamState state) {
               print("state");
-              print("${state.state?.title}");
+              print("${state.state}");
               print("${state.error}");
             },
             state: _liveStream.loginApi,

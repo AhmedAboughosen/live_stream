@@ -12,7 +12,7 @@ import 'live_stream_base.dart';
 /// [state] and is responsible for returning a VOID which is to be rendered.
 /// This is analogous to the `builder` function in [StreamBuilder].
 typedef StreamWidgetListener<S> = void Function(
-    BuildContext context, StreamState<S?> state);
+    BuildContext context, StreamState state);
 
 /// {@template bloc_listener}
 /// Takes a [StreamWidgetListener] and an optional [liveStream] and [SyncLiveStream] invokes
