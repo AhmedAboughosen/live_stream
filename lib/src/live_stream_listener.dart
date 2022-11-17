@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
-import 'package:live_stream/src/stream_state.dart';
 import 'package:nested/nested.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'live_stream.dart';
 import 'live_stream_base.dart';
@@ -155,7 +154,11 @@ class _LiveStreamListenerBaseState<B extends LiveStreamBase, S>
       child != null,
       '''${widget.runtimeType} used outside of MultiLiveStreamListener must specify a child''',
     );
-
+    // if (widget.liveStream == null) {
+    //   // Trigger a rebuild if the bloc reference has changed.
+    //   // See https://github.com/felangel/bloc/issues/2127.
+    //   context.select<B, bool>((bloc) => identical(_liveStream, bloc));
+    // }
     return child!;
   }
 
@@ -166,15 +169,12 @@ class _LiveStreamListenerBaseState<B extends LiveStreamBase, S>
   }
 
   void _subscribe() {
-    _subscription = (widget.state.listener
-        .listen((newState) {
+    _subscription = (widget.state.stream.listen((newState) {
       widget.listener(context, StreamState(state: newState, error: null));
       // _previousState = state;
-    },onError: (error){
+    }, onError: (error) {
       widget.listener(context, StreamState(state: null, error: error));
-
     }));
-
   }
 
   void _unsubscribe() {

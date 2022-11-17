@@ -202,7 +202,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "22858333e7dde952d1c9eddc11455d64f08f80e5"
+      resolved-ref: "706879010693dfbf69a03cfc76c54504391e282d"
       url: "git@github.com:AhmedAboughosen/stream_fluent_validation.git"
     source: git
     version: "0.0.1"
@@ -347,17 +347,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: a68877ee8525d9d42ad34ff8ec3f7a4871e92f8d
+      resolved-ref: bf565cbac2916d0a45906f65e98d091b1d8c7965
       url: "git@github.com:AhmedAboughosen/live_stream.git"
-    source: git
-    version: "0.0.1"
-  live_stream_base:
-    dependency: transitive
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "4d7f548ee1af63f46f825c8f7a2e5d2756eaa8ae"
-      url: "git@github.com:AhmedAboughosen/live_stream_base.git"
     source: git
     version: "0.0.1"
   logging:
