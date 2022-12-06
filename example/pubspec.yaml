@@ -59,9 +59,6 @@ dependencies:
   #RX
   rxdart: ^0.27.5
 
-  fluent_validation:
-    git: git@github.com:AhmedAboughosen/stream_fluent_validation.git
-
   live_stream:
     git: git@github.com:AhmedAboughosen/live_stream.git
 
