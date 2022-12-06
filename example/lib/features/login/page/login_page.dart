@@ -16,12 +16,13 @@ class LoginPage extends StatelessWidget {
 
 
 
+
     return LiveStreamProvider<LoginLiveStream>(
       create: liveStream,
       child: Scaffold(
           appBar: AppBar(),
-          body: LiveStreamListener<LoginLiveStream, LoginModel>(
-            listener: (context, StreamState state) {
+          body: LiveStreamListener(
+            listener: (context, AsyncState<LoginModel> state) {
               if (state.state is OnLoading) {
                 print("${(state.state as OnLoading<LoginModel?>)}");
               }
@@ -40,9 +41,8 @@ class LoginPage extends StatelessWidget {
 
               print("state");
               // print("${(state.state as OnData<LoginModel?>).state?.title}");
-              print("${state.error}");
             },
-            state: liveStream.loginApi,
+            propertyKey: #loginApi,
             liveStream: liveStream,
             child: Column(
               children: const [

@@ -32,6 +32,11 @@ abstract class LiveStreamBase implements BindableObject {
     return property;
   }
 
+  void callInit(){
+    if (_properties != null && _properties!.isNotEmpty) return;
+    init();
+  }
+
   @protected
   @mustCallSuper
   void init() ;
