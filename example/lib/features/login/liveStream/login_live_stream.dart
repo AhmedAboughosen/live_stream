@@ -1,3 +1,4 @@
+import 'package:example/features/login/repositories/login_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:live_stream/live_stream.dart';
 
@@ -14,7 +15,7 @@ class LoginLiveStream extends LiveStream {
   void login() {
     // if (!loginValidation.validate()) return;
 
-    updateAsync(#loginApi, loginRepository.login("ahmed", "naser"));
+    updateAsync<LoginModel>(#loginApi, loginRepository.login("ahmed", "naser"));
 
     // loginRepository.login(
     //     "loginValidation.email.state"," loginValidation.password.state").listen((event) {
@@ -24,8 +25,9 @@ class LoginLiveStream extends LiveStream {
 
   @override
   void init() {
-    registerProperty(#loginApi, BindableProperty.$async());
-    registerProperty(#userName, BindableProperty.$async());
-    registerProperty(#password, BindableProperty.$async());
+    registerProperty<LoginModel>(
+        #loginApi, BindableProperty.$async<LoginModel>());
+    // registerProperty(#userName, BindableProperty.$async());
+    // registerProperty(#password, BindableProperty.$async());
   }
 }

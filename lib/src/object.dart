@@ -37,7 +37,7 @@ mixin BindableObjectValueMixin on BindableObject {
 mixin BindableObjectAsyncValueMixin on BindableObject {
   Stream<AsyncState<State>> updateAsync<State>(
     Object propertyKey,
-    Object localStream,
+      Stream<State> localStream,
   ) {
     var property = getProperty(propertyKey);
 
@@ -49,9 +49,9 @@ mixin BindableObjectAsyncValueMixin on BindableObject {
       return property.emit(localStream);
     }
 
-    if (localStream is Future<State>) {
-      return property.emit(localStream.asStream());
-    }
+    // if (localStream is Future<State>) {
+    //   return property.emit(localStream.asStream());
+    // }
 
     throw Exception("object should be stream or future");
   }

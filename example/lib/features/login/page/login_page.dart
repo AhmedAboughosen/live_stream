@@ -22,21 +22,24 @@ class LoginPage extends StatelessWidget {
       child: Scaffold(
           appBar: AppBar(),
           body: LiveStreamListener(
+
             listener: (context, AsyncState<LoginModel> state) {
-              if (state.state is OnLoading) {
-                print("${(state.state as OnLoading<LoginModel?>)}");
+              if (state is OnLoading) {
+                print("${(state as OnLoading<LoginModel?>)}");
+                return;
               }
-              if (state.state is OnData) {
-                print("${(state.state as OnData<LoginModel?>).content?.title}");
+              if (state is OnData) {
+                print("${(state as OnData<LoginModel?>).content?.title}");
+                return;
               }
-              if (state.state is OnError) {
-                print("${(state.state as OnError<LoginModel?>)}");
-
+              if (state is OnError) {
+                print("${(state as OnError<LoginModel?>)}");
+                return;
               }
 
-              if (state.state is Pure) {
-                print("${(state.state as Pure<LoginModel?>)}");
-
+              if (state is Pure) {
+                print("${(state as Pure<LoginModel?>)}");
+                return;
               }
 
               print("state");

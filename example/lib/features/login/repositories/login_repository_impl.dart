@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -10,6 +12,14 @@ class LoginRepositoryImpl {
   Stream<LoginModel> login(String userName, String password) => TimerStream(
       LoginModel(id: 1, title: "ahmed Aboughosen", userId: 512),
       Duration(seconds: 4));
+
+  // Stream<LoginModel> login(String userName, String password){
+  //   final StreamController<LoginModel> _streamController =
+  //   StreamController<LoginModel>.broadcast();
+  //
+  //   _streamController.add(LoginModel(id: 1, title: "ahmed Aboughosen", userId: 512));
+  //   return _streamController.stream;
+  // }
 
   // Stream<LoginModel> login(String userName, String password) => Stream.error(new Exception("it's me"));
 
