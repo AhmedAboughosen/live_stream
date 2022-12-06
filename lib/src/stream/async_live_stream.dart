@@ -40,6 +40,7 @@ class AsyncLiveStream<State extends Object?> extends StreamBase<State> {
     }
 
     try {
+
       localStream.doOnListen(() {
         _streamSink.add(OnLoading());
       }).listen(null);

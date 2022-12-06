@@ -177,7 +177,7 @@ class _LiveStreamListenerBaseState<B extends LiveStream, S>
       _subscription = (_previousStream.stream.listen((newState) {
         widget.listener(context, newState);
       }, onError: (error) {
-        widget.listener(context, OnError(messages: error));
+        widget.listener(context, OnError<S>(messages: error));
       }));
       return;
     }
