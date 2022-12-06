@@ -1,16 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:nested/nested.dart';
 
-import 'live_stream_base.dart';
+import 'live_stream.dart';
 
 /// Function used to customize the update policy
 typedef UpdateShouldNotify<T> = bool Function(
-    T bloc, _LiveStreamProvider oldWidget);
+    T liveStream, _LiveStreamProvider oldWidget);
+
+/// Mixin which allows `MultiLiveStreamProvider` to infer the types
+/// of multiple [LiveStreamProvider]s.
+mixin LiveStreamSingleChildWidget on SingleChildWidget {}
 
 /// The `LiveStreamProvider` class depends on `InheritedWidget`.
 /// It accepts a liveStream and a widget.
-class LiveStreamProvider<T extends LiveStreamBase> extends StatefulWidget {
+
+class LiveStreamProvider<LS extends LiveStream>
+    extends LiveStreamProviderBase<LS> {
+  LiveStreamProvider({
+    Key? key,
+    required LS create,
+    required Widget child,
+    UpdateShouldNotify<LS>? updateShouldNotifyOverride,
+  }) : super(
+            key: key,
+            create: create,
+            child: child,
+            updateShouldNotifyOverride: updateShouldNotifyOverride);
+
+  /// Whenever you want to get your `LiveStream`, you can decide wether to attach the context of your widget to the `InheritedWidget` or not.
+  /// In order to control this behavior, the static method `of` has an optional boolean argument (which is true by default) which determines wether your context will be attached or not.
+  /// Basically, if you don't provide it or you just set it to `true`, [dependOnInheritedWidgetOfExactType](https://api.flutter.dev/flutter/widgets/BuildContext/dependOnInheritedWidgetOfExactType.html) will be used.
+  /// If you set
+  static T of<T extends LiveStream>(BuildContext context,
+          [bool attachContext = true]) =>
+      _LiveStreamProvider.of(context, attachContext);
+}
+
+abstract class LiveStreamProviderBase<LS extends LiveStream>
+    extends SingleChildStatefulWidget with LiveStreamSingleChildWidget {
   /// The  liveStream this provider will be hosting
-  final T create;
+  final LS create;
 
   /// The widget that the [LiveStreamProvider] will wrap
   final Widget child;
@@ -23,10 +52,10 @@ class LiveStreamProvider<T extends LiveStreamBase> extends StatefulWidget {
   ///    @override
   ///    bool updateShouldNotify(_LiveStreamProvider oldWidget) =>
   ///       updateShouldNotifyOverride != null
-  ///           ? updateShouldNotifyOverride(bloc, oldWidget)
-  ///           : oldWidget.bloc != bloc;
+  ///           ? updateShouldNotifyOverride(create, oldWidget)
+  ///           : oldWidget.create != create;
   /// ```
-  final UpdateShouldNotify<T>? updateShouldNotifyOverride;
+  final UpdateShouldNotify<LS>? updateShouldNotifyOverride;
 
   /// Builds a [LiveStreamProvider].
   ///
@@ -40,48 +69,42 @@ class LiveStreamProvider<T extends LiveStreamBase> extends StatefulWidget {
   ///    @override
   ///    bool updateShouldNotify(_LiveStreamProvider oldWidget) =>
   ///       updateShouldNotifyOverride != null
-  ///           ? updateShouldNotifyOverride(bloc, oldWidget)
-  ///           : oldWidget.bloc != bloc;
+  ///           ? updateShouldNotifyOverride(create, oldWidget)
+  ///           : oldWidget.create != create;
   /// ```
-  LiveStreamProvider({
+  LiveStreamProviderBase({
     Key? key,
     required this.child,
     required this.create,
     this.updateShouldNotifyOverride,
   }) : super(key: key);
 
-  /// Whenever you want to get your `LiveStream`, you can decide wether to attach the context of your widget to the `InheritedWidget` or not.
-  /// In order to control this behavior, the static method `of` has an optional boolean argument (which is true by default) which determines wether your context will be attached or not.
-  /// Basically, if you don't provide it or you just set it to `true`, [dependOnInheritedWidgetOfExactType](https://api.flutter.dev/flutter/widgets/BuildContext/dependOnInheritedWidgetOfExactType.html) will be used.
-  /// If you set
-  static T of<T extends LiveStreamBase>(BuildContext context,
-          [bool attachContext = true]) =>
-      _LiveStreamProvider.of(context, attachContext);
-
   /// Creates the state
   @override
-  _LiveStreamProviderState<T> createState() => _LiveStreamProviderState<T>();
+  SingleChildState<LiveStreamProviderBase<LS>> createState() =>
+      _LiveStreamProviderBaseState<LS>();
 }
 
-class _LiveStreamProviderState<T extends LiveStreamBase>
-    extends State<LiveStreamProvider<T>> {
+class _LiveStreamProviderBaseState<T extends LiveStream>
+    extends SingleChildState<LiveStreamProviderBase<T>> {
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
+    widget.create.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget buildWithChild(BuildContext context, Widget? child) {
+    // TODO: implement buildWithChild
     return _LiveStreamProvider(
       liveStream: widget.create,
       updateShouldNotifyOverride: widget.updateShouldNotifyOverride,
       child: widget.child,
     );
   }
-
-  @override
-  void dispose() {
-    widget.create.dispose();
-    super.dispose();
-  }
 }
 
-class _LiveStreamProvider<T extends LiveStreamBase> extends InheritedWidget {
+class _LiveStreamProvider<T extends LiveStream> extends InheritedWidget {
   final T liveStream;
   final Widget child;
   final UpdateShouldNotify<T>? updateShouldNotifyOverride;
@@ -92,27 +115,26 @@ class _LiveStreamProvider<T extends LiveStreamBase> extends InheritedWidget {
     this.updateShouldNotifyOverride,
   }) : super(child: child);
 
-  static T of<T extends LiveStreamBase>(
-      BuildContext context, bool attachContext) {
-    _LiveStreamProvider<T>? blocProvider;
+  static T of<T extends LiveStream>(BuildContext context, bool attachContext) {
+    _LiveStreamProvider<T>? liveStreamProvider;
 
     if (attachContext) {
-      blocProvider =
+      liveStreamProvider =
           context.dependOnInheritedWidgetOfExactType<_LiveStreamProvider<T>>();
     } else {
       var element = context
           .getElementForInheritedWidgetOfExactType<_LiveStreamProvider<T>>();
       if (element != null) {
-        blocProvider = element.widget as _LiveStreamProvider<T>;
+        liveStreamProvider = element.widget as _LiveStreamProvider<T>;
       }
     }
 
-    if (blocProvider == null) {
+    if (liveStreamProvider == null) {
       final type = _typeOf<_LiveStreamProvider<T>>();
-      throw FlutterError('Unable to find BLoC of type $type.\n'
+      throw FlutterError('Unable to find LiveStream of type $type.\n'
           'Context provided: $context');
     }
-    return blocProvider.liveStream;
+    return liveStreamProvider.liveStream;
   }
 
   static Type _typeOf<T>() => T;

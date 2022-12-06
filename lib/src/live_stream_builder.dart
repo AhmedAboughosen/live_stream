@@ -6,41 +6,39 @@ import 'package:live_stream/src/live_stream_provider.dart';
 import 'package:nested/nested.dart';
 
 import 'live_stream.dart';
-import 'live_stream_base.dart';
 
 /// Signature for the `builder` function which takes the `BuildContext` and
 /// [state] and is responsible for returning a widget which is to be rendered.
 /// This is analogous to the `builder` function in [StreamBuilder].
 typedef LiveStreamWidgetBuilder<S> = Widget Function(
-    BuildContext context, StreamState state);
+    BuildContext context, AsyncState<S?> state);
 
-/// {@template live_stream_listener}
-/// Takes a [StreamWidgetListener] and an optional [liveStream] and [SyncLiveStream] invokes
-/// the [listener] in response to `state` changes in the [SyncLiveStream].
-/// It should be used for functionality that needs to occur only in response to
-/// a `state` change such as navigation, showing a `SnackBar`, showing
-/// a `Dialog`, etc...
-/// The [listener] is guaranteed to only be called once for each `state` change
-/// unlike the `builder` in `BlocBuilder`.
+/// {@template live_stream_builder}
+/// [LiveStreamBuilder] handles building a widget in response to new `states`.
+/// [LiveStreamBuilder] is analogous to [StreamBuilder] but has simplified API to
+/// reduce the amount of boilerplate code needed as well as [LiveStream]-specific
+/// performance improvements.
+
+/// Please refer to [LiveStreamListener] if you want to "do" anything in response to
+/// `state` changes such as navigation, showing a dialog, etc...
 ///
-/// If the [SyncLiveStream] parameter is omitted, [LiveStreamListener]
-///
+
 /// ```dart
 /// LiveStreamListener(
 ///   listener: (context, state) {
-///     // do stuff here based on BlocA's state
+///     // do stuff here based on LiveStream's state
 ///   },
 ///   child: Container(),
 /// )
 /// ```
-/// Only specify the [LiveStream] if you wish to provide a [bloc] that is otherwise
+/// Only specify the [SyncLiveStream] if you wish to provide a [SyncLiveStream] that is otherwise
 /// not accessible via [LiveStreamProvider] and the current `BuildContext`.
 ///
 /// ```dart
-/// LiveStreamListener(
+/// LiveStreamBuilder(
 ///   liveStream: LiveStreamA,
 ///   listener: (context, state) {
-///     // do stuff here based on BlocA's state
+///     // do stuff here based on LiveStream's state
 ///   },
 ///   child: Container(),
 /// )
@@ -48,77 +46,75 @@ typedef LiveStreamWidgetBuilder<S> = Widget Function(
 /// {@endtemplate}
 ///
 
-class LiveStreamBuilder<B extends LiveStreamBase, S>
+class LiveStreamBuilder<B extends LiveStream, S>
     extends LiveStreamBuilderBase<B, S> {
   const LiveStreamBuilder({
     Key? key,
     required this.builder,
     B? liveStream,
-    Widget? child,
-    required StreamBase<S> state,
-  }) : super(key: key, child: child, liveStream: liveStream, state: state);
+    required Object propertyKey,
+  }) : super(key: key, liveStream: liveStream, propertyKey: propertyKey);
 
   /// The [builder] function which will be invoked on each widget build.
   /// The [builder] takes the `BuildContext` and current `state` and
   /// must return a widget.
   /// This is analogous to the [builder] function in [StreamBuilder].
-  final LiveStreamWidgetBuilder<S> builder;
+  final Function builder;
 
   @override
-  Widget build(BuildContext context, StreamState state) =>
-      builder(context, state);
+  Widget build(BuildContext context, Object state) => builder(context, state);
 }
 
-/// {@template bive_stream_listener_Base}
+/// {@template live_stream_listener_Base}
 /// Base class for widgets that listen to state changes in a specified [Stream].
 ///
 /// A [LiveStreamBuilderBase] is stateful and maintains the state subscription.
 /// The type of the state and what happens with each state change
 /// is defined by sub-classes.
 /// {@endtemplate}
-abstract class LiveStreamBuilderBase<B extends LiveStreamBase, S>
+abstract class LiveStreamBuilderBase<B extends LiveStream, S>
     extends SingleChildStatefulWidget {
-  /// {@macro bloc_listener_base}
+  /// {@macro live_stream_listener_base}
   const LiveStreamBuilderBase({
     Key? key,
     this.liveStream,
-    this.child,
-    required this.state,
-  }) : super(key: key, child: child);
-
-  /// The widget which will be rendered as a descendant of the
-  /// [LiveStreamListenerBase].
-  final Widget? child;
+    required this.propertyKey,
+  }) : super(key: key);
 
   /// The [liveStream] whose `state` will be listened to.
   /// Whenever the [stream]'s `state` changes, [listener] will be invoked.
   final B? liveStream;
 
-  /// The [state] will be listened to.
-  /// Whenever the [state]'s `state` changes, [listener] will be invoked.
-  final StreamBase<S> state;
+  /// The [propertyKey] will be mapping  properties.
+  final Object propertyKey;
 
   /// Returns a widget based on the `BuildContext` and current [state].
-  Widget build(BuildContext context, StreamState state);
+  Widget build(BuildContext context, Object state);
 
   @override
   SingleChildState<LiveStreamBuilderBase<B, S>> createState() =>
       _LiveStreamBuilderBaseState<B, S>();
 }
 
-class _LiveStreamBuilderBaseState<B extends LiveStreamBase, S>
+class _LiveStreamBuilderBaseState<B extends LiveStream, S>
     extends SingleChildState<LiveStreamBuilderBase<B, S>> {
-  StreamSubscription? _subscription;
   late B _liveStream;
-  late StreamBase<S> _state;
-  late StreamState _streamState;
+  late Object _liveStreamState;
+  late StreamBase<S> _previousStream;
 
   @override
   void initState() {
     super.initState();
     _liveStream = widget.liveStream ?? (LiveStreamProvider.of<B>(context));
-    _state = widget.state;
-    _streamState = StreamState(error: null,state: _state.state);
+    _previousStream = _liveStream.getProperty(widget.propertyKey);
+
+    if (_previousStream.isAsyncLiveStream()) {
+      _liveStreamState = _previousStream.asyncLiveStream().state;
+    }
+
+    if (_previousStream.isValueLiveStream()) {
+      _liveStreamState = _previousStream.valueLiveStream().state;
+    }
   }
 
   @override
@@ -127,11 +123,10 @@ class _LiveStreamBuilderBaseState<B extends LiveStreamBase, S>
     final oldLiveStream =
         oldWidget.liveStream ?? (LiveStreamProvider.of<B>(context));
     final currentLiveStream = widget.liveStream ?? oldLiveStream;
+
     if (oldLiveStream != currentLiveStream) {
-      if (_subscription != null) {
-        _liveStream = currentLiveStream;
-        _state = widget.state;
-      }
+      _liveStream = currentLiveStream;
+      _previousStream = _liveStream.getProperty(widget.propertyKey);
     }
   }
 
@@ -140,25 +135,18 @@ class _LiveStreamBuilderBaseState<B extends LiveStreamBase, S>
     super.didChangeDependencies();
     final liveStream = widget.liveStream ?? (LiveStreamProvider.of<B>(context));
     if (_liveStream != liveStream) {
-      if (_subscription != null) {
-        _liveStream = liveStream;
-        _state = widget.state;
-      }
+      _liveStream = liveStream;
+      _previousStream = _liveStream.getProperty(widget.propertyKey);
     }
   }
 
   @override
   Widget buildWithChild(BuildContext context, Widget? child) {
-    assert(
-      child != null,
-      '''${widget.runtimeType} used outside of MultiLiveStreamListener must specify a child''',
-    );
-
     return LiveStreamListener<B, S>(
       liveStream: _liveStream,
-      listener: (context, state) => setState(() => _streamState = state),
-      state: widget.state,
-      child: widget.build(context, _streamState),
+      listener: (context, state) => setState(() => _liveStreamState = state),
+      propertyKey: widget.propertyKey,
+      child: widget.build(context, _liveStreamState),
     );
   }
 }

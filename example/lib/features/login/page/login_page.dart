@@ -2,25 +2,27 @@ import 'package:example/features/login/liveStream/login_live_stream.dart';
 import 'package:example/features/login/repositories/login_model.dart';
 import 'package:example/features/login/repositories/login_repository_impl.dart';
 import 'package:flutter/material.dart';
-import 'package:live_stream/src/live_state.dart';
 import 'package:live_stream/src/live_stream_listener.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
-import 'package:live_stream/src/stream_state.dart';
+import 'package:live_stream/src/live_stream.dart';
 
 import '../../validation/login_validation.dart';
+import 'components/email_input.dart';
 import 'components/submit_button.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+   LoginPage({Key? key}) : super(key: key);
+ static var liveStream = LoginLiveStream(
+      loginValidation: LoginValidation(),
+      loginRepository: LoginRepositoryImpl());
 
   @override
   Widget build(BuildContext context) {
-    var _liveStream = LoginLiveStream(
-        loginValidation: LoginValidation(),
-        loginRepository: LoginRepositoryImpl());
+
+
 
     return LiveStreamProvider<LoginLiveStream>(
-      create: _liveStream,
+      create: liveStream,
       child: Scaffold(
           appBar: AppBar(),
           body: LiveStreamListener<LoginLiveStream, LoginModel>(
@@ -36,18 +38,23 @@ class LoginPage extends StatelessWidget {
 
               }
 
+              if (state.state is Pure) {
+                print("${(state.state as Pure<LoginModel?>)}");
+
+              }
+
               print("state");
               // print("${(state.state as OnData<LoginModel?>).state?.title}");
               print("${state.error}");
             },
-            state: _liveStream.loginApi,
-            liveStream: _liveStream,
+            state: liveStream.loginApi,
+            liveStream: liveStream,
             child: Column(
               children: const [
                 SizedBox(
                   height: 30,
                 ),
-                // EmailInput(),
+                EmailInput(),
                 // SizedBox(
                 //   height: 30,
                 // ),
