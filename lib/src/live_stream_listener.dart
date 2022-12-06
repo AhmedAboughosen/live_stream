@@ -118,7 +118,6 @@ class _LiveStreamListenerBaseState<B extends LiveStream, S>
     super.initState();
     _liveStream = widget.liveStream ?? (LiveStreamProvider.of<B>(context));
     _previousStream = _liveStream.getProperty(widget.propertyKey);
-    _liveStream.callInit();
     _subscribe();
   }
 
@@ -136,8 +135,6 @@ class _LiveStreamListenerBaseState<B extends LiveStream, S>
         _unsubscribe();
         _liveStream = currentLiveStream;
         _previousStream = _liveStream.getProperty(widget.propertyKey);
-        _liveStream.callInit();
-
       }
       _subscribe();
     }
@@ -153,7 +150,6 @@ class _LiveStreamListenerBaseState<B extends LiveStream, S>
         _unsubscribe();
         _liveStream = liveStream;
         _previousStream = _liveStream.getProperty(widget.propertyKey);
-        _liveStream.callInit();
 
       }
       _subscribe();

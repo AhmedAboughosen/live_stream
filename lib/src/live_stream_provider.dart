@@ -87,6 +87,14 @@ abstract class LiveStreamProviderBase<LS extends LiveStream>
 
 class _LiveStreamProviderBaseState<T extends LiveStream>
     extends SingleChildState<LiveStreamProviderBase<T>> {
+
+  @override
+  void initState() {
+    widget.create.init();
+    super.initState();
+  }
+
+
   @override
   void dispose() {
     widget.create.dispose();
