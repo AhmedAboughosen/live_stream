@@ -21,7 +21,7 @@ class LoginPage extends StatelessWidget {
       create: liveStream,
       child: Scaffold(
           appBar: AppBar(),
-          body: LiveStreamListener(
+          body: LiveStreamListener<LoginLiveStream,LoginModel>(
 
             listener: (context, AsyncState<LoginModel> state) {
               if (state is OnLoading) {

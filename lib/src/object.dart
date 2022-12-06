@@ -1,6 +1,7 @@
 import 'package:live_stream/src/stream/async_live_stream.dart';
 import 'package:live_stream/src/stream/value_live_stream.dart';
 
+import '../../live_stream.dart';
 import 'error/errors.dart';
 import 'live_stream.dart';
 
@@ -10,7 +11,9 @@ abstract class BindableObject {
   );
 
   StreamBase<State> registerProperty<State>(
-      Object propertyKey, StreamBase<State> property);
+    Object propertyKey,
+    StreamBase<State> property,
+  );
 }
 
 /// BindableObjectValueMixin
@@ -20,6 +23,7 @@ mixin BindableObjectValueMixin on BindableObject {
     Object propertyKey,
     State Function(State?) updator,
   ) {
+
     var property = getProperty(propertyKey);
 
     if (property is! ValueLiveStream<State>) {
@@ -37,7 +41,7 @@ mixin BindableObjectValueMixin on BindableObject {
 mixin BindableObjectAsyncValueMixin on BindableObject {
   Stream<AsyncState<State>> updateAsync<State>(
     Object propertyKey,
-      Stream<State> localStream,
+    Stream<State> localStream,
   ) {
     var property = getProperty(propertyKey);
 

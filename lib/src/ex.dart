@@ -14,12 +14,12 @@ class ExampleBloc extends LiveStream {
     updateValue<int>(#counter, (value) => value! + 1);
 
 
-    LiveStreamListener(
-      listener: (context,LoginModel state) {
-
-
-      }, propertyKey: #key,
-    );
+    // LiveStreamListener(
+    //   listener: (context,LoginModel state) {
+    //
+    //
+    //   }, propertyKey: #key,
+    // );
     updateAsync<LoginModel>(#loginApi, login());
   }
 

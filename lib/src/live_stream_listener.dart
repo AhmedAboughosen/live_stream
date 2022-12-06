@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
-import 'package:live_stream/src/stream/async_live_stream.dart';
-import 'package:live_stream/src/stream/value_live_stream.dart';
 import 'package:nested/nested.dart';
 
+import '../../live_stream.dart';
 import 'live_stream.dart';
 
 /// Mixin which allows `MultiLiveStreamListener` to infer the types
@@ -16,7 +15,8 @@ mixin LiveStreamListenerSingleChildWidget on SingleChildWidget {}
 /// Signature for the `builder` function which takes the `BuildContext` and
 /// [state] and is responsible for returning a VOID which is to be rendered.
 /// This is analogous to the `builder` function in [StreamBuilder].
-typedef StreamWidgetListener<S> = void Function(BuildContext context, S state);
+typedef StreamWidgetListener = void Function(
+    BuildContext context, ValueListenable state);
 
 /// {@template live_stream_listener}
 /// Takes a [StreamWidgetListener] and an optional [liveStream] and [SyncLiveStream] invokes
@@ -56,16 +56,17 @@ class LiveStreamListener<B extends LiveStream, S>
     extends LiveStreamListenerBase<B, S> {
   const LiveStreamListener({
     Key? key,
-    required Function listener,
+    required StreamWidgetListener listener,
     B? liveStream,
     Widget? child,
     required Object propertyKey,
   }) : super(
-            key: key,
-            child: child,
-            listener: listener,
-            liveStream: liveStream,
-            propertyKey: propertyKey);
+          key: key,
+          child: child,
+          listener: listener,
+          liveStream: liveStream,
+          propertyKey: propertyKey,
+        );
 }
 
 /// {@template live_stream_listener_Base}
@@ -97,7 +98,7 @@ abstract class LiveStreamListenerBase<B extends LiveStream, S>
   /// The [LiveStreamWidgetListener] which will be called on every `state` change.
   /// This [listener] should be used for any code which needs to execute
   /// in response to a `state` change.
-  final Function listener;
+  final StreamWidgetListener listener;
 
   /// The [propertyKey] will be mapping  properties.
   final Object propertyKey;
@@ -150,7 +151,6 @@ class _LiveStreamListenerBaseState<B extends LiveStream, S>
         _unsubscribe();
         _liveStream = liveStream;
         _previousStream = _liveStream.getProperty(widget.propertyKey);
-
       }
       _subscribe();
     }
@@ -173,18 +173,30 @@ class _LiveStreamListenerBaseState<B extends LiveStream, S>
   }
 
   void _subscribe() {
+    // _subscription =
+    //     ((_previousStream.stream as Stream<AsyncState<S>>).listen((newState) {
+    //   widget.listener(context, newState);
+    // }, onError: (error) {
+    //   widget.listener(context, error as OnError<S>);
+    // }));
+
     if (_previousStream is AsyncLiveStream) {
       _subscription = (_previousStream.stream.listen((newState) {
-        widget.listener(context, newState);
+        widget.listener(
+            context, ValueListenable<AsyncState<S>>(value: newState));
       }, onError: (error) {
-        widget.listener(context, OnError<S>(messages: error));
+        widget.listener(context, ValueListenable<AsyncState<S>>(value: error,));
       }));
       return;
     }
 
     if (_previousStream is ValueLiveStream) {
       _subscription = (_previousStream.stream.listen((newState) {
-        widget.listener(context, newState);
+        widget.listener(
+            context,
+            ValueListenable<S>(
+              value: newState,
+            ));
       }));
     }
   }

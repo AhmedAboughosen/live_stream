@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:live_stream/src/live_stream_listener.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
 import 'package:nested/nested.dart';
+import '../../live_stream.dart';
 
 import 'live_stream.dart';
 
