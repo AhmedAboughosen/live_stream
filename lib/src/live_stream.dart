@@ -11,10 +11,15 @@ abstract class LiveStream extends LiveStreamBase
 abstract class LiveStreamBase implements BindableObject {
   Map<Object, StreamBase>? _properties;
 
+  @visibleForTesting
+  @protected
+  Iterable<MapEntry<Object, StreamBase>> get properties =>
+      _properties?.entries ?? [];
+
   @override
   StreamBase<State> registerProperty<State>(
       Object propertyKey, StreamBase<State> property) {
-    (_properties ?? <Object, StreamBase<State>>{})[propertyKey] = property;
+    (_properties ??= <Object, StreamBase<State>>{})[propertyKey] = property;
     return property;
   }
 
@@ -22,19 +27,16 @@ abstract class LiveStreamBase implements BindableObject {
   StreamBase<State> getProperty<State>(
     Object propertyKey,
   ) {
-    if (!((_properties ?? <Object, StreamBase<State>>{})
-        .containsKey(propertyKey))) {
+    var property = _properties?[propertyKey] as StreamBase<State>?;
+    if (property == null) {
       throw NotfoundPropertyException(propertyKey);
     }
-
-    var property = _properties?[propertyKey] as StreamBase<State>;
-
     return property;
   }
 
   @protected
   @mustCallSuper
-  void init() ;
+  void init();
 
   /// dispose
   void dispose() {
@@ -60,14 +62,13 @@ abstract class StreamBase<State> {
   /// The current [stream] of states.
   Stream get stream;
 
-  bool isAsyncLiveStream()=> this is AsyncLiveStream;
+  bool isAsyncLiveStream() => this is AsyncLiveStream;
 
-  AsyncLiveStream asyncLiveStream()=> this as AsyncLiveStream;
+  AsyncLiveStream asyncLiveStream() => this as AsyncLiveStream;
 
-  ValueLiveStream valueLiveStream()=> this as ValueLiveStream;
+  ValueLiveStream valueLiveStream() => this as ValueLiveStream;
 
-  bool isValueLiveStream()=> this is ValueLiveStream;
-
+  bool isValueLiveStream() => this is ValueLiveStream;
 }
 
 abstract class AsyncState<State> extends StateStreamable<State> {
