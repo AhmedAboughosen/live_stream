@@ -2,43 +2,39 @@ import 'package:example/features/login/liveStream/login_live_stream.dart';
 import 'package:example/features/login/repositories/login_model.dart';
 import 'package:example/features/login/repositories/login_repository_impl.dart';
 import 'package:flutter/material.dart';
+import 'package:live_stream/live_stream.dart';
+import 'package:live_stream/src/live_stream.dart';
 import 'package:live_stream/src/live_stream_listener.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
-import 'package:live_stream/src/live_stream.dart';
 
 class LoginPage extends StatelessWidget {
-   LoginPage({Key? key}) : super(key: key);
- static var liveStream = LoginLiveStream(
-      loginRepository: LoginRepositoryImpl());
+  LoginPage({Key? key}) : super(key: key);
+  static var liveStream =
+      LoginLiveStream(loginRepository: LoginRepositoryImpl());
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
     return LiveStreamProvider<LoginLiveStream>(
       create: liveStream,
       child: Scaffold(
           appBar: AppBar(),
-          body: LiveStreamListener<LoginLiveStream,LoginModel>(
+          body: LiveStreamListener<LoginLiveStream, LoginModel>(
+            listener: (context, ValueListenable state) {
+              if (state.value is OnLoading) {
+                print("${(state.value as OnLoading<LoginModel?>)}");
+                return;
+              }
+              if (state.value is OnData) {
+                print("${(state.value as OnData<LoginModel?>).content?.title}");
+                return;
+              }
+              if (state.value is OnError) {
+                print("${(state.value as OnError<LoginModel?>)}");
+                return;
+              }
 
-            listener: (context, AsyncState<LoginModel> state) {
-              if (state is OnLoading) {
-                print("${(state as OnLoading<LoginModel?>)}");
-                return;
-              }
-              if (state is OnData) {
-                print("${(state as OnData<LoginModel?>).content?.title}");
-                return;
-              }
-              if (state is OnError) {
-                print("${(state as OnError<LoginModel?>)}");
-                return;
-              }
-
-              if (state is Pure) {
-                print("${(state as Pure<LoginModel?>)}");
+              if (state.value is Pure) {
+                print("${(state.value as Pure<LoginModel?>)}");
                 return;
               }
 

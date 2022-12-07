@@ -4,7 +4,6 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../live_stream.dart';
 
-
 class AsyncLiveStream<State extends Object?> extends StreamBase<State> {
   late BehaviorSubject<AsyncState<State>> _asyncStream;
 
@@ -35,19 +34,20 @@ class AsyncLiveStream<State extends Object?> extends StreamBase<State> {
   /// as it is the first thing emitted by the instance.
   ///return [stream] to handle [error] or [state] if have.
   /// * Throws a [StateError] if the LiveStream is closed.
-  Stream<AsyncState<State>> emit(Stream<State> localStream) {
+  Stream<AsyncState<State>> emit(Stream<State> Function() localStream) {
     if (isClosed) {
       throw StateError('Cannot emit new states after calling close');
     }
 
     try {
+      var stream = DeferStream(() => localStream()).asBroadcastStream();
 
-      localStream.doOnListen(() {
-        _streamSink.add(OnLoading());
+      stream.doOnListen(() {
+        _streamSink.add(OnLoading<State>());
       }).listen(null);
 
-      localStream.listen((event) {
-        _streamSink.add(OnData(content: event));
+      stream.listen((event) {
+        _streamSink.add(OnData<State>(content: event));
       }, onError: (error) {
         _addError(error);
       });
@@ -80,7 +80,7 @@ class AsyncLiveStream<State extends Object?> extends StreamBase<State> {
     }
 
     try {
-      _streamSink.add(OnData(content: state));
+      _streamSink.add(OnData<State>(content: state));
     } catch (error) {
       _addError(error);
       rethrow;
@@ -95,7 +95,7 @@ class AsyncLiveStream<State extends Object?> extends StreamBase<State> {
     }
 
     try {
-      _streamSink.add(OnLoading());
+      _streamSink.add(OnLoading<State>());
     } catch (error) {
       _addError(error);
       rethrow;
@@ -104,7 +104,7 @@ class AsyncLiveStream<State extends Object?> extends StreamBase<State> {
   }
 
   void _addError(Object error) {
-    _streamSink.addError(OnError(messages: error));
+    _streamSink.addError(OnError<State>(messages: error));
   }
 
   /// Closes the instance.
