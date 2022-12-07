@@ -1,4 +1,5 @@
 import 'package:live_stream/src/property.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'live_stream.dart';
 
@@ -16,6 +17,8 @@ class ExampleBloc extends LiveStream {
     //
     //   }, propertyKey: #key,
     // );
+    ReplaySubject<int> replaySubject = ReplaySubject<int>();
+
     updateAsync<LoginModel>(#loginApi, () => login());
   }
 

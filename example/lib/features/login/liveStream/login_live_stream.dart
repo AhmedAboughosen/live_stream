@@ -15,7 +15,8 @@ class LoginLiveStream extends LiveStream {
   void login() {
     // if (!loginValidation.validate()) return;
 
-    updateAsync<LoginModel>(#loginApi, loginRepository.login("ahmed", "naser"));
+    updateAsync<LoginModel>(
+        #loginApi, () => loginRepository.login("ahmed", "naser"));
 
     // loginRepository.login(
     //     "loginValidation.email.state"," loginValidation.password.state").listen((event) {

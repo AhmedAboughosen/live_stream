@@ -40,7 +40,7 @@ class AsyncLiveStream<State extends Object?> extends StreamBase<State> {
     }
 
     try {
-      var stream = DeferStream(() => localStream()).asBroadcastStream();
+      var stream = Rx.defer(() => localStream()).asBroadcastStream();
 
       stream.doOnListen(() {
         _streamSink.add(OnLoading<State>());
