@@ -23,7 +23,6 @@ mixin BindableObjectValueMixin on BindableObject {
     Object propertyKey,
     State Function(State?) updator,
   ) {
-
     var property = getProperty(propertyKey);
 
     if (property is! ValueLiveStream<State>) {
@@ -41,7 +40,7 @@ mixin BindableObjectValueMixin on BindableObject {
 mixin BindableObjectAsyncValueMixin on BindableObject {
   Stream<AsyncState<State>> updateAsync<State>(
     Object propertyKey,
-    Stream<State> localStream,
+    Stream<State> Function() localStream,
   ) {
     var property = getProperty(propertyKey);
 
@@ -49,15 +48,7 @@ mixin BindableObjectAsyncValueMixin on BindableObject {
       throw NotfoundPropertyException(propertyKey);
     }
 
-    if (localStream is Stream<State>) {
-      return property.emit(localStream);
-    }
-
-    // if (localStream is Future<State>) {
-    //   return property.emit(localStream.asStream());
-    // }
-
-    throw Exception("object should be stream or future");
+    return property.emit(localStream);
   }
 
   Stream<AsyncState<State>> addAsync<State>(
