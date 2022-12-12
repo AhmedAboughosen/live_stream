@@ -10,7 +10,7 @@ abstract class LiveStream extends LiveStreamBase
     with BindableObjectValueMixin, BindableObjectAsyncValueMixin {}
 
 abstract class LiveStreamBase implements BindableObject {
-  Map<Object, StreamBase>? _properties;
+  Map<Object, StreamBase<dynamic>>? _properties;
 
   @visibleForTesting
   @protected
@@ -22,7 +22,7 @@ abstract class LiveStreamBase implements BindableObject {
     Object propertyKey,
     StreamBase<State> property,
   ) {
-    (_properties ??= <Object, StreamBase<State>>{})[propertyKey] = property;
+    (_properties ??= <Object, StreamBase<dynamic>>{})[propertyKey] = property;
     return property;
   }
 

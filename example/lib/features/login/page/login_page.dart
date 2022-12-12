@@ -3,7 +3,6 @@ import 'package:example/features/login/repositories/login_model.dart';
 import 'package:example/features/login/repositories/login_repository_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:live_stream/live_stream.dart';
-import 'package:live_stream/src/live_stream.dart';
 import 'package:live_stream/src/live_stream_listener.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
 
@@ -42,7 +41,7 @@ class LoginPage extends StatelessWidget {
               // print("${(state.state as OnData<LoginModel?>).state?.title}");
             },
             propertyKey: #loginApi,
-            liveStream: liveStream,
+            // liveStream: liveStream,
             child: Column(
               children: const [
                 SizedBox(
@@ -53,9 +52,9 @@ class LoginPage extends StatelessWidget {
                 //   height: 30,
                 // ),
                 // PasswordInput(),
-                // SizedBox(
-                //   height: 30,
-                // ),
+                SizedBox(
+                  height: 30,
+                ),
                 SubmitButton()
               ],
             ),
@@ -64,63 +63,51 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-//
-// class EmailInput extends StatelessWidget {
-//   const EmailInput({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) =>
-//       LiveStreamBuilder<LoginLiveStream,String>(
-//         state: LiveStreamProvider.of<LoginLiveStream>(context)
-//             .loginValidation
-//             .email,
-//         liveStream: LoginPage.liveStream,
-//         builder: (BuildContext context, StreamState state) {
-//           return TextField(
-//             keyboardType: TextInputType.emailAddress,
-//             onChanged: (LiveStreamProvider.of<LoginLiveStream>(context))
-//                 .loginValidation
-//                 .email
-//                 .valueChange,
-//             decoration: InputDecoration(
-//                 labelText: "Email address",
-//                 hintText: "you@example.com",
-//                 errorText: state.error != null ? "${state.error}" : null),
-//           );
-//         },
-//       );
-// }
+class EmailInput extends StatelessWidget {
+  const EmailInput({Key? key}) : super(key: key);
 
-// import 'package:example/features/login/liveStream/login_live_stream.dart';
-// import 'package:flutter/material.dart';
-// import 'package:live_stream/src/live_stream_builder.dart';
-// import 'package:live_stream/src/live_stream_provider.dart';
-// import 'package:live_stream_base/live_stream.dart';
-//
-// class PasswordInput extends StatelessWidget {
-//   const PasswordInput({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) =>
-//       LiveStreamBuilder<LoginLiveStream, String>(
-//         state: LiveStreamProvider.of<LoginLiveStream>(context)
-//             .loginValidation
-//             .password,
-//         builder: (BuildContext context, StreamBase<String?> state) {
-//           return TextField(
-//             keyboardType: TextInputType.visiblePassword,
-//             onChanged: (LiveStreamProvider.of<LoginLiveStream>(context))
-//                 .loginValidation
-//                 .email
-//                 .valueChange,
-//             decoration: InputDecoration(
-//                 labelText: "Password ",
-//                 hintText: "*******",
-//                 errorText: state.hasError ? "${state.error}" : null),
-//           );
-//         },
-//       );
-// }
+  @override
+  Widget build(BuildContext context) =>
+      LiveStreamBuilder<LoginLiveStream, String>(
+        propertyKey: #email,
+        builder: (context, ValueListenable state) {
+          return TextField(
+            keyboardType: TextInputType.emailAddress,
+            // onChanged:
+            //     (LiveStreamProvider.of<LoginLiveStream>(context)).emailChange,
+            decoration: InputDecoration(
+                labelText: "Email address",
+                hintText: "you@example.com",
+                errorText: state.value.toString().isEmpty
+                    ? "please enter your email"
+                    : null),
+          );
+        },
+      );
+}
+
+class PasswordInput extends StatelessWidget {
+  const PasswordInput({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) =>
+      LiveStreamBuilder<LoginLiveStream, String>(
+        propertyKey: #password,
+        builder: (context, ValueListenable state) {
+          return TextField(
+            keyboardType: TextInputType.visiblePassword,
+            // onChanged: (LiveStreamProvider.of<LoginLiveStream>(context))
+            //     .passwordChange,
+            decoration: InputDecoration(
+                labelText: "Password ",
+                hintText: "*******",
+                errorText: state.value.toString().isEmpty
+                    ? "please enter password at least 4 character"
+                    : null),
+          );
+        },
+      );
+}
 
 class SubmitButton extends StatelessWidget {
   const SubmitButton({Key? key}) : super(key: key);

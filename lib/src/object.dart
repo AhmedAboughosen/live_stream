@@ -21,7 +21,7 @@ abstract class BindableObject {
 mixin BindableObjectValueMixin on BindableObject {
   void updateValue<State>(
     Object propertyKey,
-    State Function(State?) updator,
+    State? Function(State?) updator,
   ) {
     var property = getProperty(propertyKey);
 
@@ -29,7 +29,7 @@ mixin BindableObjectValueMixin on BindableObject {
       throw NotfoundPropertyException(propertyKey);
     }
 
-    State newState = updator(property.state);
+    State? newState = updator(property.state);
 
     property.update(newState);
   }

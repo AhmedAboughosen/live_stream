@@ -9,7 +9,7 @@ class ExampleBloc extends LiveStream {
     registerProperty(#counter, BindableProperty.$value(initial: 0));
     registerProperty(#loginApi, BindableProperty.$async());
 
-    updateValue<int>(#counter, (value) => value! + 1);
+    updateValue<int>(#counter, (value) => null);
 
     // LiveStreamListener(
     //   listener: (context,LoginModel state) {

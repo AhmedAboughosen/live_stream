@@ -15,7 +15,7 @@ class ValueLiveStream<State> extends StreamBase<State> {
   @override
   Stream<State> get stream => _syncStream.stream;
 
-  StreamSink<State> get _streamSink => _syncStream.sink;
+  StreamSink<State?> get _streamSink => _syncStream.sink;
 
   /// Whether the ValueStream is closed.
   ///
@@ -26,7 +26,7 @@ class ValueLiveStream<State> extends StreamBase<State> {
   State? get state => _syncStream.stream.value;
 
   /// update state of current value stream.
-  void update(State state) {
+  void update(State? state) {
     if (isClosed) {
       throw StateError('Cannot emit new states after calling close');
     }
