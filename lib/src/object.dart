@@ -33,6 +33,18 @@ mixin BindableObjectValueMixin on BindableObject {
 
     property.update(newState);
   }
+
+  State? getValue<State>(
+    Object propertyKey,
+  ) {
+    var property = getProperty(propertyKey);
+
+    if (property is! ValueLiveStream<State>) {
+      throw NotfoundPropertyException(propertyKey);
+    }
+
+    return property.state;
+  }
 }
 
 /// BindableObjectAsyncValueMixin
@@ -49,6 +61,18 @@ mixin BindableObjectAsyncValueMixin on BindableObject {
     }
 
     return property.emit(localStream);
+  }
+
+  AsyncState<State>? getAsyncValue<State>(
+    Object propertyKey,
+  ) {
+    var property = getProperty(propertyKey);
+
+    if (property is! AsyncLiveStream<State>) {
+      throw NotfoundPropertyException(propertyKey);
+    }
+
+    return property.state;
   }
 
   Stream<AsyncState<State>> addAsync<State>(

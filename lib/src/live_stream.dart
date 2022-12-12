@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:live_stream/src/stream/async_live_stream.dart';
 import 'package:live_stream/src/stream/value_live_stream.dart';
 
+import '../live_stream.dart';
 import 'error/errors.dart';
 import 'object.dart';
 
@@ -18,7 +19,9 @@ abstract class LiveStreamBase implements BindableObject {
 
   @override
   StreamBase<State> registerProperty<State>(
-      Object propertyKey, StreamBase<State> property,) {
+    Object propertyKey,
+    StreamBase<State> property,
+  ) {
     (_properties ??= <Object, StreamBase<State>>{})[propertyKey] = property;
     return property;
   }
@@ -50,24 +53,18 @@ abstract class LiveStreamBase implements BindableObject {
   }
 }
 
-
 /// An object that provides access to a stream of states over time.
 abstract class StreamBase<State> {
-
   void onClose();
 
   /// The current [stream] of states.
   Stream get stream;
 
-
   bool isAsyncLiveStream() => this is AsyncLiveStream;
-
 
   AsyncLiveStream asyncLiveStream() => this as AsyncLiveStream;
 
   ValueLiveStream valueLiveStream() => this as ValueLiveStream;
 
   bool isValueLiveStream() => this is ValueLiveStream;
-
-
 }

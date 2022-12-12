@@ -29,7 +29,7 @@ class LoginPage extends StatelessWidget {
                 return;
               }
               if (state.value is OnError) {
-                print("${(state.value as OnError<LoginModel?>)}");
+                print("${(state.value as OnError<LoginModel>).messages}");
                 return;
               }
 

@@ -173,12 +173,6 @@ class _LiveStreamListenerBaseState<B extends LiveStream, S>
   }
 
   void _subscribe() {
-    // _subscription =
-    //     ((_previousStream.stream as Stream<AsyncState<S>>).listen((newState) {
-    //   widget.listener(context, newState);
-    // }, onError: (error) {
-    //   widget.listener(context, error as OnError<S>);
-    // }));
 
     if (_previousStream is AsyncLiveStream) {
       _subscription = (_previousStream.stream.listen((newState) {

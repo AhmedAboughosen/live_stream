@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:live_stream/src/live_stream_listener.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
 import 'package:nested/nested.dart';
-import '../../live_stream.dart';
 
+import '../../live_stream.dart';
 import 'live_stream.dart';
 
 /// Signature for the `builder` function which takes the `BuildContext` and
 /// [state] and is responsible for returning a widget which is to be rendered.
 /// This is analogous to the `builder` function in [StreamBuilder].
-typedef LiveStreamWidgetBuilder<S> = Widget Function(
-    BuildContext context, AsyncState<S?> state);
+typedef StreamWidgetBuilder = Widget Function(
+    BuildContext context, ValueListenable state);
 
 /// {@template live_stream_builder}
 /// [LiveStreamBuilder] handles building a widget in response to new `states`.
@@ -60,10 +60,11 @@ class LiveStreamBuilder<B extends LiveStream, S>
   /// The [builder] takes the `BuildContext` and current `state` and
   /// must return a widget.
   /// This is analogous to the [builder] function in [StreamBuilder].
-  final Function builder;
+  final StreamWidgetBuilder builder;
 
   @override
-  Widget build(BuildContext context, Object state) => builder(context, state);
+  Widget build(BuildContext context, ValueListenable state) =>
+      builder(context, state);
 }
 
 /// {@template live_stream_listener_Base}
@@ -90,7 +91,7 @@ abstract class LiveStreamBuilderBase<B extends LiveStream, S>
   final Object propertyKey;
 
   /// Returns a widget based on the `BuildContext` and current [state].
-  Widget build(BuildContext context, Object state);
+  Widget build(BuildContext context, ValueListenable state);
 
   @override
   SingleChildState<LiveStreamBuilderBase<B, S>> createState() =>
@@ -100,7 +101,7 @@ abstract class LiveStreamBuilderBase<B extends LiveStream, S>
 class _LiveStreamBuilderBaseState<B extends LiveStream, S>
     extends SingleChildState<LiveStreamBuilderBase<B, S>> {
   late B _liveStream;
-  late Object _liveStreamState;
+  late ValueListenable _liveStreamState;
   late StreamBase<S> _previousStream;
 
   @override
@@ -110,11 +111,13 @@ class _LiveStreamBuilderBaseState<B extends LiveStream, S>
     _previousStream = _liveStream.getProperty(widget.propertyKey);
 
     if (_previousStream.isAsyncLiveStream()) {
-      _liveStreamState = _previousStream.asyncLiveStream().state;
+      _liveStreamState =
+          ValueListenable(value: _previousStream.asyncLiveStream().state);
     }
 
     if (_previousStream.isValueLiveStream()) {
-      _liveStreamState = _previousStream.valueLiveStream().state;
+      _liveStreamState =
+          ValueListenable(value: _previousStream.valueLiveStream().state);
     }
   }
 

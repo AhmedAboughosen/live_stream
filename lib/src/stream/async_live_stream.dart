@@ -44,9 +44,7 @@ class AsyncLiveStream<State extends Object?> extends StreamBase<State> {
 
       stream.doOnListen(() {
         _streamSink.add(OnLoading<State>());
-      }).listen(null);
-
-      stream.listen((event) {
+      }).listen((event) {
         _streamSink.add(OnData<State>(content: event));
       }, onError: (error) {
         _addError(error);
