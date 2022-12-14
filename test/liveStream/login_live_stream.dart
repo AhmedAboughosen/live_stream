@@ -1,22 +1,14 @@
-import 'package:example/features/login/repositories/login_model.dart';
-import 'package:injectable/injectable.dart';
 import 'package:live_stream/live_stream.dart';
+import 'package:rxdart/streams.dart';
 
-import '../repositories/login_repository_impl.dart';
-
-@Injectable()
 class LoginLiveStream extends LiveStream {
-  final LoginRepositoryImpl loginRepository;
+  final ILoginRepository loginRepository;
 
   LoginLiveStream({
     required this.loginRepository,
   });
 
   void login() {
-    print("email");
-    print(getValue<String>(#email)!.isNotEmpty);
-    print("password");
-    print(getValue<String>(#password)!.isNotEmpty);
 
     if (!isValid()) {
       print("error");
@@ -69,6 +61,23 @@ class LoginLiveStream extends LiveStream {
 
     registerProperty<LoginModel>(
         #loginApi, BindableProperty.$async<LoginModel>());
-
   }
+}
+
+
+abstract class ILoginRepository{
+  Stream<LoginModel> login(String userName, String password);
+
+}
+
+class LoginModel {
+  final int? userId;
+  final int? id;
+  final String? title;
+
+  LoginModel({
+    this.userId,
+    this.id,
+    this.title,
+  });
 }

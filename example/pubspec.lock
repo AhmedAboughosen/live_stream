@@ -338,7 +338,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "242cdb2fbc00169ea903abfc15fc2cd6c7bfdf23"
+      resolved-ref: "67fe3c4743fa83cb7f3d302274f58ec7008f839d"
       url: "git@github.com:AhmedAboughosen/live_stream.git"
     source: git
     version: "0.0.1"
@@ -411,7 +411,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.4"
+    version: "6.0.5"
   pub_semver:
     dependency: transitive
     description:

@@ -12,6 +12,8 @@ abstract class AsyncState<State> extends StateStreamable<State> {
 
   bool isOnError() => this is OnError<State>;
 
+  bool isOnPure() => this is Pure<State>;
+
   State? get state => (this as OnData<State>).content;
 
   Object get error => (this as OnError<State>).messages;

@@ -1,10 +1,8 @@
+import 'package:example/features/login/page/login_page.dart';
 import 'package:flutter/material.dart';
-
-import 'features/login/page/login_page.dart';
+import 'package:live_stream/live_stream.dart';
 
 void main() {
-
-
   runApp(const MyApp());
 }
 
@@ -28,7 +26,92 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home:  LoginPage(),
+      home: LoginPage(),
     );
   }
+}
+
+class CounterLiveStream extends LiveStream {
+  @override
+  void init() {
+    registerProperty<int>(
+        #counter,
+        BindableProperty.$value<int>(
+          initial: 0,
+        ));
+  }
+
+  void increment() {
+    updateValue<int>(#counter, (old) {
+      int newValue = old! + 1;
+      return newValue;
+    });
+  }
+
+  void decrement() {
+    updateValue<int>(#counter, (old) {
+      int newValue = old! - 1;
+      return newValue;
+    });
+  }
+}
+
+class CounterPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return LiveStreamProvider<CounterLiveStream>(
+      create: CounterLiveStream(),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Live Stream Counter')),
+        body: Center(child: const CounterText()),
+        floatingActionButton: FloatingButton(),
+      ),
+    );
+  }
+}
+
+class FloatingButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {
+              LiveStreamProvider.of<CounterLiveStream>(context).increment();
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: FloatingActionButton(
+            child: const Icon(Icons.remove),
+            onPressed: () {
+              LiveStreamProvider.of<CounterLiveStream>(context).decrement();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CounterText extends StatelessWidget {
+  const CounterText({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) =>
+      LiveStreamBuilder<CounterLiveStream, int>(
+        propertyKey: #counter,
+        builder: (context, ValueListenable state) {
+          return Center(
+            child: Text('${state.value}'),
+          );
+        },
+      );
 }

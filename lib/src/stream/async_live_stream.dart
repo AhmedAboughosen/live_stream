@@ -9,7 +9,7 @@ class AsyncLiveStream<State extends Object?> extends StreamBase<State> {
 
   AsyncLiveStream({bool sync = false, State? seedValue}) {
     _asyncStream = BehaviorSubject<AsyncState<State>>.seeded(
-        seedValue == null ? Pure() : OnData(content: seedValue),
+        seedValue == null ? Pure<State>() : OnData(content: seedValue),
         sync: sync);
   }
 

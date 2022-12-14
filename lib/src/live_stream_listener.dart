@@ -46,6 +46,7 @@ typedef StreamWidgetListener = void Function(
 ///   listener: (context, state) {
 ///     // do stuff here based on LiveStreamA's state
 ///   },
+///   propertyKey : key
 ///   child: Container(),
 /// )
 /// ```

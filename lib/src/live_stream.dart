@@ -44,7 +44,7 @@ abstract class LiveStreamBase implements BindableObject {
   /// dispose
   void dispose() {
     if (_properties == null) return;
-    if (!_properties!.isNotEmpty) {
+    if (_properties!.isNotEmpty) {
       for (var prop in _properties!.values) {
         prop.onClose();
       }

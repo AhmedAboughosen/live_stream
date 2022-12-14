@@ -8,7 +8,7 @@ import 'package:live_stream/src/live_stream_provider.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
-  static var liveStream =
+   var liveStream =
       LoginLiveStream(loginRepository: LoginRepositoryImpl());
 
   @override
@@ -23,10 +23,12 @@ class LoginPage extends StatelessWidget {
                 print("${(state.value as OnLoading<LoginModel?>)}");
                 return;
               }
+
               if (state.value is OnData) {
                 print("${(state.value as OnData<LoginModel?>).content?.title}");
                 return;
               }
+
               if (state.value is OnError) {
                 print("${(state.value as OnError<LoginModel>).messages}");
                 return;
@@ -41,17 +43,16 @@ class LoginPage extends StatelessWidget {
               // print("${(state.state as OnData<LoginModel?>).state?.title}");
             },
             propertyKey: #loginApi,
-            // liveStream: liveStream,
             child: Column(
               children: const [
                 SizedBox(
                   height: 30,
                 ),
-                // EmailInput(),
-                // SizedBox(
-                //   height: 30,
-                // ),
-                // PasswordInput(),
+                EmailInput(),
+                SizedBox(
+                  height: 30,
+                ),
+                PasswordInput(),
                 SizedBox(
                   height: 30,
                 ),
@@ -73,8 +74,8 @@ class EmailInput extends StatelessWidget {
         builder: (context, ValueListenable state) {
           return TextField(
             keyboardType: TextInputType.emailAddress,
-            // onChanged:
-            //     (LiveStreamProvider.of<LoginLiveStream>(context)).emailChange,
+            onChanged:
+                (LiveStreamProvider.of<LoginLiveStream>(context)).emailChange,
             decoration: InputDecoration(
                 labelText: "Email address",
                 hintText: "you@example.com",
@@ -96,8 +97,8 @@ class PasswordInput extends StatelessWidget {
         builder: (context, ValueListenable state) {
           return TextField(
             keyboardType: TextInputType.visiblePassword,
-            // onChanged: (LiveStreamProvider.of<LoginLiveStream>(context))
-            //     .passwordChange,
+            onChanged: (LiveStreamProvider.of<LoginLiveStream>(context))
+                .passwordChange,
             decoration: InputDecoration(
                 labelText: "Password ",
                 hintText: "*******",
