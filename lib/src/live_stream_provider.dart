@@ -32,8 +32,8 @@ class LiveStreamProvider<LS extends LiveStream>
   /// Basically, if you don't provide it or you just set it to `true`, [dependOnInheritedWidgetOfExactType](https://api.flutter.dev/flutter/widgets/BuildContext/dependOnInheritedWidgetOfExactType.html) will be used.
   /// If you set
   static T of<T extends LiveStream>(BuildContext context,
-          [bool attachContext = true]) =>
-      _LiveStreamProvider.of(context, attachContext);
+          [bool attachContext = false]) =>
+      _LiveStreamProvider.of<T>(context, attachContext);
 }
 
 abstract class LiveStreamProviderBase<LS extends LiveStream>
