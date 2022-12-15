@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:live_stream/live_stream.dart';
 import 'package:live_stream/src/live_stream_listener.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
+import 'package:live_stream/src/widget.dart';
 
 LoginLiveStream liveStream =
     LoginLiveStream(loginRepository: LoginRepositoryImpl());
@@ -21,7 +22,19 @@ class LoginPage extends StatelessWidget {
           body: LiveStreamListener<LoginLiveStream, LoginModel>(
             listener: (context, ValueListenable state) {
 
-              LiveStreamListenerCallback();
+              LiveStreamListenerCallback(
+                onLoading: (){},
+                onData: (){
+
+                },
+                onError: (){
+
+                },
+                onPure: (){
+
+                },
+                asyncState: state.value,
+              );
 
               if (state.value is OnLoading) {
                 print("${(state.value as OnLoading<LoginModel?>)}");

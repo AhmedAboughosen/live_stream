@@ -3,6 +3,40 @@ import 'package:flutter/material.dart';
 import '../live_stream.dart';
 
 typedef LiveStreamListenerWidgetCallback = Widget Function();
+typedef LiveStreamListenerVoidCallbackFunction = Widget Function();
+
+class LiveStreamListenerVoidCallback<State> {
+  final AsyncState<State> asyncState;
+  final LiveStreamListenerVoidCallbackFunction onLoading;
+  final LiveStreamListenerVoidCallbackFunction onData;
+  final LiveStreamListenerVoidCallbackFunction onError;
+  final LiveStreamListenerVoidCallbackFunction onPure;
+
+  LiveStreamListenerVoidCallback({
+    Key? key,
+    required this.asyncState,
+    required this.onLoading,
+    required this.onData,
+    required this.onError,
+    required this.onPure,
+  }) {
+    if (asyncState is OnLoading) {
+      onLoading();
+    }
+
+    if (asyncState is OnData) {
+      onData();
+    }
+
+    if (asyncState is OnError) {
+      onError();
+    }
+
+    if (asyncState is Pure) {
+      onPure();
+    }
+  }
+}
 
 class LiveStreamListenerCallback<State> extends StatelessWidget {
   final AsyncState<State> asyncState;
