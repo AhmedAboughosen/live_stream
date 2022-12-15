@@ -32,17 +32,11 @@ class CounterLiveStream extends LiveStream {
   }
 
   void increment() {
-    updateValue<int>(#counter, (old) {
-      int newValue = old! + 1;
-      return newValue;
-    });
+    updateValue<int>(#counter, (old) => old! + 1);
   }
 
   void decrement() {
-    updateValue<int>(#counter, (old) {
-      int newValue = old! - 1;
-      return newValue;
-    });
+    updateValue<int>(#counter, (old) => old! - 1);
   }
 }
 
