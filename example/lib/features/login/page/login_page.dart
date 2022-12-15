@@ -2,10 +2,8 @@ import 'package:example/features/login/liveStream/login_live_stream.dart';
 import 'package:example/features/login/repositories/login_model.dart';
 import 'package:example/features/login/repositories/login_repository_impl.dart';
 import 'package:flutter/material.dart';
-import 'package:live_stream/live_stream.dart';
-import 'package:live_stream/src/live_stream_listener.dart';
-import 'package:live_stream/src/live_stream_provider.dart';
-import 'package:live_stream/src/widget.dart';
+import 'package:reactive_live_stream/live_stream.dart';
+
 
 LoginLiveStream liveStream =
     LoginLiveStream(loginRepository: LoginRepositoryImpl());

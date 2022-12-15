@@ -58,8 +58,8 @@ dependencies:
 
   #RX
   rxdart: ^0.27.5
-
-  live_stream:
+#
+  reactive_live_stream:
     git: git@github.com:AhmedAboughosen/live_stream.git
 
 dev_dependencies:

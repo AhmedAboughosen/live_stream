@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:live_stream/live_stream.dart';
+import 'package:reactive_live_stream/live_stream.dart';
 
 void main() {
   runApp(const MyApp());

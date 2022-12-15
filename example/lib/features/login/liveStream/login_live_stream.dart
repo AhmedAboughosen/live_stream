@@ -1,6 +1,6 @@
 import 'package:example/features/login/repositories/login_model.dart';
 import 'package:injectable/injectable.dart';
-import 'package:live_stream/live_stream.dart';
+import 'package:reactive_live_stream/live_stream.dart';
 
 import '../repositories/login_repository_impl.dart';
 
