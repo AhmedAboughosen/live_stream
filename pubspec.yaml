@@ -1,7 +1,11 @@
-name: live_stream
-description: A new Flutter project.
+name: reactive_live_stream
+description: A lightweight, yet powerful way to bind your application state with your business logic.
 version: 0.0.1
-homepage:
+author: Ahmed Aboughsen
+repository: https://github.com/AhmedAboughosen/live_stream
+issue_tracker: https://github.com/AhmedAboughosen/live_stream/issues
+homepage: https://github.com/AhmedAboughosen/live_stream
+
 
 environment:
   sdk: ">=2.17.6 <3.0.0"

@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 
-import '../live_stream.dart';
+import '../../live_stream.dart';
+
 
 class ValueLiveStream<State> extends StreamBase<State> {
   late BehaviorSubject<State> _syncStream;

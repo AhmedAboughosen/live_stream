@@ -1,4 +1,5 @@
-import 'package:live_stream/live_stream.dart';
+
+import 'package:reactive_live_stream/live_stream.dart';
 
 class CounterLiveStream extends LiveStream {
   @override

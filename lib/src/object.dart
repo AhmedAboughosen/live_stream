@@ -1,9 +1,6 @@
-import 'package:live_stream/src/stream/async_live_stream.dart';
-import 'package:live_stream/src/stream/value_live_stream.dart';
 
-import '../../live_stream.dart';
+import '../live_stream.dart';
 import 'error/errors.dart';
-import 'live_stream.dart';
 
 abstract class BindableObject {
   StreamBase<State> getProperty<State>(

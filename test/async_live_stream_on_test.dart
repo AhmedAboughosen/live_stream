@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:live_stream/live_stream.dart';
+import 'package:reactive_live_stream/live_stream.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'liveStream/login_live_stream.dart';

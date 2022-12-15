@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:live_stream/src/live_stream_provider.dart';
 import 'package:nested/nested.dart';
-
 import '../../live_stream.dart';
+
 import 'live_stream.dart';
 
 /// Mixin which allows `MultiLiveStreamListener` to infer the types
@@ -18,7 +17,7 @@ mixin LiveStreamListenerSingleChildWidget on SingleChildWidget {}
 typedef StreamWidgetListener = void Function(
     BuildContext context, ValueListenable state);
 
-/// {@template live_stream_listener}
+/// {@template reactive_live_stream_listener}
 /// Takes a [StreamWidgetListener] and an optional [liveStream] and [SyncLiveStream] invokes
 /// the [listener] in response to `state` changes in the [SyncLiveStream].
 /// It should be used for functionality that needs to occur only in response to
@@ -70,7 +69,7 @@ class LiveStreamListener<B extends LiveStream, S>
         );
 }
 
-/// {@template live_stream_listener_Base}
+/// {@template reactive_live_stream_listener_Base}
 /// Base class for widgets that listen to state changes in a specified [Stream].
 ///
 /// A [LiveStreamListenerBase] is stateful and maintains the state subscription.
@@ -79,7 +78,7 @@ class LiveStreamListener<B extends LiveStream, S>
 /// {@endtemplate}
 abstract class LiveStreamListenerBase<B extends LiveStream, S>
     extends SingleChildStatefulWidget with LiveStreamListenerSingleChildWidget {
-  /// {@macro live_stream_listener_base}
+  /// {@macro reactive_live_stream_listener_base}
   const LiveStreamListenerBase({
     Key? key,
     required this.listener,

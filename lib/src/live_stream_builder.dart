@@ -1,12 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:live_stream/src/live_stream_listener.dart';
-import 'package:live_stream/src/live_stream_provider.dart';
 import 'package:nested/nested.dart';
 
 import '../../live_stream.dart';
-import 'live_stream.dart';
 
 /// Signature for the `builder` function which takes the `BuildContext` and
 /// [state] and is responsible for returning a widget which is to be rendered.
@@ -14,7 +11,7 @@ import 'live_stream.dart';
 typedef StreamWidgetBuilder = Widget Function(
     BuildContext context, ValueListenable state);
 
-/// {@template live_stream_builder}
+/// {@template reactive_live_stream_builder}
 /// [LiveStreamBuilder] handles building a widget in response to new `states`.
 /// [LiveStreamBuilder] is analogous to [StreamBuilder] but has simplified API to
 /// reduce the amount of boilerplate code needed as well as [LiveStream]-specific
@@ -67,7 +64,7 @@ class LiveStreamBuilder<B extends LiveStream, S>
       builder(context, state);
 }
 
-/// {@template live_stream_listener_Base}
+/// {@template reactive_live_stream_listener_Base}
 /// Base class for widgets that listen to state changes in a specified [Stream].
 ///
 /// A [LiveStreamBuilderBase] is stateful and maintains the state subscription.
@@ -76,7 +73,7 @@ class LiveStreamBuilder<B extends LiveStream, S>
 /// {@endtemplate}
 abstract class LiveStreamBuilderBase<B extends LiveStream, S>
     extends SingleChildStatefulWidget {
-  /// {@macro live_stream_listener_base}
+  /// {@macro reactive_live_stream_listener_base}
   const LiveStreamBuilderBase({
     Key? key,
     this.liveStream,

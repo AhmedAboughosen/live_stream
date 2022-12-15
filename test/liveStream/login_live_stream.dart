@@ -1,4 +1,4 @@
-import 'package:live_stream/live_stream.dart';
+import 'package:reactive_live_stream/live_stream.dart';
 import 'package:rxdart/streams.dart';
 
 class LoginLiveStream extends LiveStream {

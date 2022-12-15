@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-import 'live_stream_listener.dart';
+import '../../live_stream.dart';
 
-/// {@template multi_live_stream_listener}
+/// {@template multi_reactive_live_stream_listener}
 /// Merges multiple [LiveStreamListener] widgets into one widget tree.
 ///
 /// [MultiLiveStreamListener] improves the readability and eliminates the need
@@ -55,7 +55,7 @@ import 'live_stream_listener.dart';
 /// readability due to the reduction in nesting and boilerplate.
 /// {@endtemplate}
 class MultiLiveStreamListener extends MultiProvider {
-  /// {@macro multi_live_stream_listener}
+  /// {@macro multi_reactive_live_stream_listener}
   MultiLiveStreamListener({
     Key? key,
     required List<LiveStreamListenerSingleChildWidget> listeners,

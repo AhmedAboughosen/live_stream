@@ -1,7 +1,6 @@
-import 'package:live_stream/src/stream/async_live_stream.dart';
-import 'package:live_stream/src/stream/value_live_stream.dart';
 
-import 'live_stream.dart';
+
+import '../../live_stream.dart';
 
 typedef PropertyValueChanged<State> = void Function(State value);
 

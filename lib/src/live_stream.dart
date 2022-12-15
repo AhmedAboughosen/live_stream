@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:live_stream/src/stream/async_live_stream.dart';
-import 'package:live_stream/src/stream/value_live_stream.dart';
+import 'package:reactive_live_stream/src/stream/async_live_stream.dart';
 
 import '../live_stream.dart';
 import 'error/errors.dart';

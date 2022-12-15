@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'live_stream_provider.dart';
 
-/// {@template multi_live_stream_provider}
+/// {@template multi_reactive_live_stream_provider}
 /// Merges multiple [LiveStreamProvider] widgets into one widget tree.
 ///
 /// [MultiLiveStreamProvider] improves the readability and eliminates the need
@@ -49,7 +49,7 @@ import 'live_stream_provider.dart';
 /// readability due to the reduction in nesting and boilerplate.
 /// {@endtemplate}
 class MultiLiveStreamProvider extends MultiProvider {
-  /// {@macro multi_live_stream_provider}
+  /// {@macro multi_reactive_live_stream_provider}
   MultiLiveStreamProvider({
     Key? key,
     required List<LiveStreamSingleChildWidget> providers,

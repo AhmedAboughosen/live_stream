@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:live_stream/live_stream.dart';
+import 'package:reactive_live_stream/live_stream.dart';
 
 void main() {
   test('adds one to input values', () {
