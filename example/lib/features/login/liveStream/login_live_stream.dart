@@ -24,7 +24,7 @@ class LoginLiveStream extends LiveStream {
     }
 
     updateAsync<LoginModel>(
-        #loginApi, () => loginRepository.login("ahmed", "naser"));
+        #loginApi, () => loginRepository.login(getValue<String>(#email)!,  getValue<String>(#password)!));
   }
 
   bool isValid() {

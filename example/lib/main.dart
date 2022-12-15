@@ -1,4 +1,3 @@
-import 'package:example/features/login/page/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:live_stream/live_stream.dart';
 
@@ -13,20 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Live Stream Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: CounterPage(),
     );
   }
 }
@@ -56,11 +46,13 @@ class CounterLiveStream extends LiveStream {
   }
 }
 
+final liveStream = CounterLiveStream();
+
 class CounterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LiveStreamProvider<CounterLiveStream>(
-      create: CounterLiveStream(),
+      create: liveStream,
       child: Scaffold(
         appBar: AppBar(title: const Text('Live Stream Counter')),
         body: Center(child: const CounterText()),

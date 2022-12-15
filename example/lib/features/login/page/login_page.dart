@@ -6,10 +6,11 @@ import 'package:live_stream/live_stream.dart';
 import 'package:live_stream/src/live_stream_listener.dart';
 import 'package:live_stream/src/live_stream_provider.dart';
 
+LoginLiveStream liveStream =
+    LoginLiveStream(loginRepository: LoginRepositoryImpl());
+
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
-   var liveStream =
-      LoginLiveStream(loginRepository: LoginRepositoryImpl());
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class EmailInput extends StatelessWidget {
   const EmailInput({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
+  Widget build(BuildContext context_) =>
       LiveStreamBuilder<LoginLiveStream, String>(
         propertyKey: #email,
         builder: (context, ValueListenable state) {
@@ -91,7 +92,7 @@ class PasswordInput extends StatelessWidget {
   const PasswordInput({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
+  Widget build(BuildContext context_) =>
       LiveStreamBuilder<LoginLiveStream, String>(
         propertyKey: #password,
         builder: (context, ValueListenable state) {
