@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../live_stream.dart';
 
 typedef LiveStreamListenerWidgetCallback = Widget Function();
-typedef LiveStreamListenerVoidCallbackFunction = Widget Function();
+typedef LiveStreamListenerVoidCallbackFunction = void Function();
 
 class LiveStreamListenerVoidCallback<State> {
   final AsyncState<State> asyncState;

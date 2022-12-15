@@ -21,43 +21,24 @@ class LoginPage extends StatelessWidget {
           appBar: AppBar(),
           body: LiveStreamListener<LoginLiveStream, LoginModel>(
             listener: (context, ValueListenable state) {
-
-              LiveStreamListenerCallback(
-                onLoading: (){},
-                onData: (){
-
+              LiveStreamListenerVoidCallback(
+                onLoading: () {
+                  print("${(state.value as OnLoading<LoginModel?>)}");
                 },
-                onError: (){
-
+                onData: () {
+                  print(
+                      "${(state.value as OnData<LoginModel?>).content?.title}");
                 },
-                onPure: (){
-
+                onError: () {
+                  print("${(state.value as OnError<LoginModel>).messages}");
+                },
+                onPure: () {
+                  print("${(state.value as Pure<LoginModel?>)}");
                 },
                 asyncState: state.value,
               );
 
-              if (state.value is OnLoading) {
-                print("${(state.value as OnLoading<LoginModel?>)}");
-                return;
-              }
-
-              if (state.value is OnData) {
-                print("${(state.value as OnData<LoginModel?>).content?.title}");
-                return;
-              }
-
-              if (state.value is OnError) {
-                print("${(state.value as OnError<LoginModel>).messages}");
-                return;
-              }
-
-              if (state.value is Pure) {
-                print("${(state.value as Pure<LoginModel?>)}");
-                return;
-              }
-
               print("state");
-              // print("${(state.state as OnData<LoginModel?>).state?.title}");
             },
             propertyKey: #loginApi,
             child: Column(
