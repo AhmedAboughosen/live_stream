@@ -23,19 +23,9 @@ Lets take a look at how to use LiveStreamProvider to provide a CounteLiveStream 
         ));
   }
 
-  void increment() {
-    updateValue<int>(#counter, (old) {
-      int newValue = old! + 1;
-      return newValue;
-    });
-  }
+  void increment() => updateValue<int>(#counter, (old) => old! + 1);
 
-  void decrement() {
-    updateValue<int>(#counter, (old) {
-      int newValue = old! - 1;
-      return newValue;
-    });
-  }
+  void decrement() => updateValue<int>(#counter, (old) => old! - 1);
 }
 
 ```
