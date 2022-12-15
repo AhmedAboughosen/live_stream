@@ -55,8 +55,6 @@ Lets take a look at how to use LiveStreamProvider to provide a CounteLiveStream 
 
 ## main.dart
 
-Stream Fluent Validation  also supports multiple validation checks   like this:
-
 ```dart
 
 void main() {
