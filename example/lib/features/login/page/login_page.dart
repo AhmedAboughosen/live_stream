@@ -20,6 +20,9 @@ class LoginPage extends StatelessWidget {
           appBar: AppBar(),
           body: LiveStreamListener<LoginLiveStream, LoginModel>(
             listener: (context, ValueListenable state) {
+
+              LiveStreamListenerCallback();
+
               if (state.value is OnLoading) {
                 print("${(state.value as OnLoading<LoginModel?>)}");
                 return;

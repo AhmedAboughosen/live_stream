@@ -12,3 +12,4 @@ export 'package:live_stream/src/stream/async_live_stream.dart';
 export 'package:live_stream/src/stream/value_live_stream.dart';
 export 'package:live_stream/src/error/errors.dart';
 export 'package:live_stream/src/live_stream_state.dart';
+export 'package:live_stream/src/widget.dart';
